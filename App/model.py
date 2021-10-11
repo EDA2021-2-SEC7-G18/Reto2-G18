@@ -81,7 +81,7 @@ def loadinfo(piece_file, artists_file, catalog):
         lt.addLast(lista, elemento)
         #for medioit in lt.iterator(catalog['medium']):
     
-    merge.sort(lista, sortoldpieces)
+    #merge.sort(lista, sortoldpieces)
     
     for elemento in lt.iterator(lista):
         
@@ -100,7 +100,16 @@ def gettamanio(catalog, medio):
 
 def getres(catalog, medio, numero):
     pareja = mp.get(catalog['medium'], medio)
-    return me.getValue(pareja)[numero][0]
+    valor = me.getValue(pareja)[:numero]
+    lista = lt.newList('ARRAY_LIST')
+    for a in valor:
+        lt.addLast(lista, a)
+    
+    merge.sort(lista, sortoldpieces)
+    res= []
+    for b in lt.iterator(lista):
+        res.append(b[0])
+    return res 
 
         
 def modvarios(IDSU):
@@ -132,7 +141,7 @@ def comparebirthday(firstArtist, secondArtist):
 
 # Funciones de ordenamiento
 def sortoldpieces(pieceone, piecetwo):
-    return pieceone[2]<piecetwo[2]
+    return pieceone[1]<piecetwo[1]
 def fixdatePieces(piecelist):
     
     stringprev = str(piecelist['DateAcquired'])

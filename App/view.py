@@ -63,7 +63,7 @@ while True:
         medio = input('Ingrese medio a buscar: ')
         tamanio = controller.gettamanio(catalog, medio)
         numero = int(input('Ingrese el numero de obras a buscar, como maximo ' + str(tamanio) + ': '))
-        numero -=1
+        
         #controller.oldpieces(catalog, medio)
         res = controller.getres(catalog, medio, numero)
         print(res)
