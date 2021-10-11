@@ -37,10 +37,16 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("2- Las n obras mas antiguas por medio especifico")
 
 catalog = None
 
+
+def initCatalog():
+    return controller.initCatalog()
+
+def loadData(catalog):
+    return controller.loadData(catalog)
 """
 Menu principal
 """
@@ -49,10 +55,18 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
-
+        catalog = initCatalog()
+        loadData(catalog)
+        #print(loadData(catalog))
+        #print(catalog['medium'])
     elif int(inputs[0]) == 2:
-        pass
-
+        medio = input('Ingrese medio a buscar: ')
+        tamanio = controller.gettamanio(catalog, medio)
+        numero = int(input('Ingrese el numero de obras a buscar, como maximo ' + str(tamanio) + ': '))
+        numero -=1
+        #controller.oldpieces(catalog, medio)
+        res = controller.getres(catalog, medio, numero)
+        print(res)
     else:
         sys.exit(0)
 sys.exit(0)
