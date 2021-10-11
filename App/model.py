@@ -100,15 +100,18 @@ def gettamanio(catalog, medio):
 
 def getres(catalog, medio, numero):
     pareja = mp.get(catalog['medium'], medio)
-    valor = me.getValue(pareja)[:numero]
+    valor = me.getValue(pareja)
     lista = lt.newList('ARRAY_LIST')
     for a in valor:
         lt.addLast(lista, a)
     
     merge.sort(lista, sortoldpieces)
     res= []
+    i=0
     for b in lt.iterator(lista):
-        res.append(b[0])
+        if i<numero:
+            res.append(b[0])
+        i+=1
     return res 
 
         
