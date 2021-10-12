@@ -57,7 +57,7 @@ while True:
         print("Cargando información de los archivos ....")
         catalog = initCatalog()
         loadData(catalog)
-        #print(loadData(catalog))
+        loadData(catalog)
         #print(catalog['medium'])
     elif int(inputs[0]) == 2:
         medio = input('Ingrese medio a buscar: ')
@@ -67,6 +67,11 @@ while True:
         #controller.oldpieces(catalog, medio)
         res = controller.getres(catalog, medio, numero)
         print(res)
+    elif int(inputs[0])==3:
+        nacionalidad = input('Ingrese la nacionalidad para el conteo de obras: ')
+        res = controller.countpieces(nacionalidad, catalog)
+        print(res)
+
     else:
         sys.exit(0)
 sys.exit(0)

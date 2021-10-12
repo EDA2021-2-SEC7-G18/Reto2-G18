@@ -25,6 +25,7 @@
  """
 
 
+from sys import call_tracing
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
@@ -42,14 +43,16 @@ los mismos.
 def newCatalog():
     catalog = {'artists': None,
                 'pieces': None,
-                'medium': None
+                'medium': None,
+                'nationality':None
                }
     
     
     catalog['artists'] = mp.newMap(maptype='PROBING', loadfactor=1)
     catalog['pieces'] = mp.newMap(maptype='PROBING', loadfactor=1)
     catalog['medium'] = mp.newMap(maptype='PROBING', loadfactor=1)
-    #mp.put(catalog['medium'], 'llaveee', 'valorr')
+    catalog['nationality'] = mp.newMap(maptype='PROBING', loadfactor=1)
+    
     return catalog
 def newmap():
     return mp.newMap()
@@ -63,27 +66,22 @@ def put():
 def loadinfo(piece_file, artists_file, catalog):
   
     for artisttemp in artists_file:   #Crea map con constituentID y la info de los artistas
-        constituentID = artisttemp['ConstituentID']
+        
         #artisttemp.pop('ConstituentID')
-        mp.put(catalog['artists'],constituentID, artisttemp)
+        mp.put(catalog['artists'],artisttemp['ConstituentID'], artisttemp)
     
     lista = lt.newList('ARRAY_LIST')
     diccionariotemp = {}
-    for piece in piece_file:
+    for piece in piece_file:           #INDICE PIECES
         IDSU = reemplazar(piece)
         piece['ConstituentID'] = modvarios(IDSU) #divide en lista los ID
-        pieceID =  piece['ObjectID']
-        piece.pop('ObjectID')
-        mp.put(catalog['pieces'],pieceID, piece )
+        mp.put(catalog['pieces'],piece['ObjectID'], piece )  #Crea map indice de pieces
         
 
-        elemento = [piece['Medium'], piece['Title'], piece['Date']]
+        elemento = [piece['Medium'], piece['Title'], piece['Date']] #PARTE DE CARGA DE  indice MEDIUM
         lt.addLast(lista, elemento)
-        #for medioit in lt.iterator(catalog['medium']):
-    
-    #merge.sort(lista, sortoldpieces)
-    
-    for elemento in lt.iterator(lista):
+   
+    for elemento in lt.iterator(lista):  
         
         if diccionariotemp.get(elemento[0]) != None:
             diccionariotemp[elemento[0]].append([elemento[1], elemento[2]])
@@ -93,6 +91,42 @@ def loadinfo(piece_file, artists_file, catalog):
     for medio in diccionariotemp:
         mp.put(catalog['medium'],medio,diccionariotemp[medio])  #mapa con array dentro con estructura: {medio:[titulo, anio],medio:[titulo, anio] }
     
+
+def loadnationality(catalog):
+    piecesID = mp.keySet(catalog['pieces'])
+    
+    for pieceID in lt.iterator(piecesID):
+        
+        piecepair = mp.get(catalog['pieces'], pieceID)
+        piecevalue = me.getValue(piecepair) #valor de catalog['pieces]
+        
+        lista = []
+        diccionario = {}
+        
+        if type(piecevalue['ConstituentID']) != list: 
+            infoartistpair = mp.get(catalog['artists'], piecevalue['ConstituentID'])
+            nationality = me.getValue(infoartistpair)['Nationality']
+            if nationality not in lista:
+                lista.append(nationality)
+
+        else:
+            for ID in piecevalue['ConstituentID']:
+                infoartistpair = mp.get(catalog['artists'], ID)
+                nationality = me.getValue(infoartistpair)['Nationality']
+                if nationality not in lista:
+                    lista.append(nationality)
+
+            
+        
+        for nacionalidad in lista:
+            if diccionario.get(nacionalidad) != None:
+                diccionario[nacionalidad].append([piecevalue])
+            else: 
+                diccionario[nacionalidad]=[piecevalue]
+        mp.put(catalog['nationality'], nacionalidad, diccionario)
+    
+    
+
 def gettamanio(catalog, medio):
     pareja = mp.get(catalog['medium'], medio)
     return len(me.getValue(pareja))
@@ -131,11 +165,14 @@ def sortArtists(catalog):
     sa.sort(catalog['artists'], comparebirthday)
 
 
-def sortPieces(catalog):
-    merge.sort(catalog['pieces'], comparedate)
 # Funciones para creacion de datos
 
 # Funciones de consulta
+def countpieces(nacionalidad, catalog):
+    obraspair = mp.get(catalog['nationality'], nacionalidad)
+    obras = me.getValue(obraspair)
+    #return catalog['nationality']
+    return len(obras)
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 def comparebirthday(firstArtist, secondArtist):

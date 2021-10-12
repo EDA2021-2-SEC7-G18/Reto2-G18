@@ -43,11 +43,12 @@ def initCatalog():
 # Funciones para la carga de datos
 
 def loadinfo(catalog):
-    artistsfile = cf.data_dir + 'MoMA/Artists-utf8-large.csv'
-    piecesfile = cf.data_dir + 'MoMA/Artworks-utf8-large.csv'
+    artistsfile = cf.data_dir + 'MoMA/Artists-utf8-small.csv'
+    piecesfile = cf.data_dir + 'MoMA/Artworks-utf8-small.csv'
     piece_file = csv.DictReader(open(piecesfile, encoding='utf-8'))
     artists_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
     model.loadinfo(piece_file, artists_file, catalog)  #catalog con dos mapas uno con info de los artistas y otro con las piezas. Adicionalmente se carga el indice medium
+    model.loadnationality(catalog)
  
 def gettamanio(catalog, medio):
     return model.gettamanio(catalog, medio)
@@ -63,3 +64,5 @@ def sortPieces(catalog):
 def oldpieces(catalog, medio):
     model.oldpieces(catalog, medio)
 # Funciones de consulta sobre el catálogo
+def countpieces(nacionalidad, catalog):
+    return model.countpieces(nacionalidad, catalog)
