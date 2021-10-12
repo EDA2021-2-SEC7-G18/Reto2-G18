@@ -38,6 +38,7 @@ def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
     print("2- Las n obras mas antiguas por medio especifico")
+    print("3- Cuantas obras por nacionalidad?")
 
 catalog = None
 
@@ -64,7 +65,6 @@ while True:
         tamanio = controller.gettamanio(catalog, medio)
         numero = int(input('Ingrese el numero de obras a buscar, como maximo ' + str(tamanio) + ': '))
         
-        #controller.oldpieces(catalog, medio)
         res = controller.getres(catalog, medio, numero)
         print(res)
     elif int(inputs[0])==3:

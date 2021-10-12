@@ -94,36 +94,38 @@ def loadinfo(piece_file, artists_file, catalog):
 
 def loadnationality(catalog):
     piecesID = mp.keySet(catalog['pieces'])
-    
+    diccionario = {}
     for pieceID in lt.iterator(piecesID):
         
         piecepair = mp.get(catalog['pieces'], pieceID)
-        piecevalue = me.getValue(piecepair) #valor de catalog['pieces]
+        piecevalue = me.getValue(piecepair) #valor de catalog['pieces] iterado
         
         lista = []
-        diccionario = {}
+        
         
         if type(piecevalue['ConstituentID']) != list: 
             infoartistpair = mp.get(catalog['artists'], piecevalue['ConstituentID'])
             nationality = me.getValue(infoartistpair)['Nationality']
-            if nationality not in lista:
-                lista.append(nationality)
+            lista.append(nationality)
 
         else:
+            
             for ID in piecevalue['ConstituentID']:
                 infoartistpair = mp.get(catalog['artists'], ID)
                 nationality = me.getValue(infoartistpair)['Nationality']
                 if nationality not in lista:
                     lista.append(nationality)
-
-            
         
         for nacionalidad in lista:
             if diccionario.get(nacionalidad) != None:
-                diccionario[nacionalidad].append([piecevalue])
+                diccionario[nacionalidad].append(piecevalue)
             else: 
                 diccionario[nacionalidad]=[piecevalue]
-        mp.put(catalog['nationality'], nacionalidad, diccionario)
+
+    #catalog['nationality'] = diccionario.keys()
+    for llave in diccionario:
+
+        mp.put(catalog['nationality'], llave, diccionario[llave])
     
     
 
@@ -170,10 +172,10 @@ def sortArtists(catalog):
 # Funciones de consulta
 def countpieces(nacionalidad, catalog):
     obraspair = mp.get(catalog['nationality'], nacionalidad)
-    obras = me.getValue(obraspair)
+    resprev = me.getValue(obraspair)
+    res = len(resprev)
     #return catalog['nationality']
-    return len(obras)
-
+    return res
 # Funciones utilizadas para comparar elementos dentro de una lista
 def comparebirthday(firstArtist, secondArtist):
     return (int(firstArtist['BeginDate']) < int(secondArtist['BeginDate']))
