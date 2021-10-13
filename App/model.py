@@ -51,7 +51,7 @@ def newCatalog():
     catalog['artists'] = mp.newMap(maptype='PROBING', loadfactor=1)
     catalog['pieces'] = mp.newMap(maptype='PROBING', loadfactor=1)
     catalog['medium'] = mp.newMap(maptype='PROBING', loadfactor=1)
-    catalog['nationality'] = mp.newMap(maptype='PROBING', loadfactor=1)
+    catalog['nationality'] = mp.newMap(maptype='CHAINING', loadfactor = 10000)
     
     return catalog
 def newmap():
@@ -100,33 +100,21 @@ def loadnationality(catalog):
         piecepair = mp.get(catalog['pieces'], pieceID)
         piecevalue = me.getValue(piecepair) #valor de catalog['pieces] iterado
         
-        lista = []
         
         
         if type(piecevalue['ConstituentID']) != list: 
             infoartistpair = mp.get(catalog['artists'], piecevalue['ConstituentID'])
             nationality = me.getValue(infoartistpair)['Nationality']
-            lista.append(nationality)
+            mp.put(catalog['nationality'], nationality, piecevalue)
 
         else:
-            
+
             for ID in piecevalue['ConstituentID']:
                 infoartistpair = mp.get(catalog['artists'], ID)
                 nationality = me.getValue(infoartistpair)['Nationality']
-                if nationality not in lista:
-                    lista.append(nationality)
+                mp.put(catalog['nationality'], nationality, piecevalue)
         
-        for nacionalidad in lista:
-            if diccionario.get(nacionalidad) != None:
-                diccionario[nacionalidad].append(piecevalue)
-            else: 
-                diccionario[nacionalidad]=[piecevalue]
-
-    #catalog['nationality'] = diccionario.keys()
-    for llave in diccionario:
-
-        mp.put(catalog['nationality'], llave, diccionario[llave])
-    
+        
     
 
 def gettamanio(catalog, medio):

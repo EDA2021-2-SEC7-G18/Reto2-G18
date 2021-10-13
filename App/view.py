@@ -58,8 +58,8 @@ while True:
         print("Cargando información de los archivos ....")
         catalog = initCatalog()
         loadData(catalog)
-        loadData(catalog)
-        #print(catalog['medium'])
+        
+        print(catalog['nationality'])
     elif int(inputs[0]) == 2:
         medio = input('Ingrese medio a buscar: ')
         tamanio = controller.gettamanio(catalog, medio)
