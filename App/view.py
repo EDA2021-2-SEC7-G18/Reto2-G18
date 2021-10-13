@@ -25,6 +25,7 @@ import sys
 import controller
 from DISClib.ADT import list as lt
 assert cf
+import time
 
 
 """
@@ -47,7 +48,7 @@ def initCatalog():
     return controller.initCatalog()
 
 def loadData(catalog):
-    return controller.loadData(catalog)
+    return controller.loadAll(catalog)
 """
 Menu principal
 """
@@ -55,13 +56,13 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
+        start_time=time.time()
         print("Cargando información de los archivos ....")
         catalog = initCatalog()
         loadData(catalog)
-        loadData(catalog)
-        #print(catalog['medium'])
+        print("--- %s seconds ---" % (time.time() - start_time))
     elif int(inputs[0]) == 2:
-        medio = input('Ingrese medio a buscar: ')
+        medio = input('1Ingrese medio a buscar: ')
         tamanio = controller.gettamanio(catalog, medio)
         numero = int(input('Ingrese el numero de obras a buscar, como maximo ' + str(tamanio) + ': '))
         

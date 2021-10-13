@@ -23,6 +23,9 @@
 import config as cf
 import model
 import csv
+from DISClib.ADT import list as lt
+from DISClib.ADT import map as mp
+from DISClib.DataStructures import mapentry as me
 
 
 """
@@ -41,10 +44,37 @@ def initCatalog():
     catalog = model.newCatalog()
     return catalog
 # Funciones para la carga de datos
+def loadArtists(catalog):
+    artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
+    artists_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
+    for artist in artists_file:
+        model.addArtist(catalog, artist)
+def loadPieces(catalog):
+    piecesfile = cf.data_dir + 'Artworks-utf8-small.csv'
+    piece_file = csv.DictReader(open(piecesfile, encoding='utf-8'))
+    for piece in piece_file:
+        model.addPiece(catalog,piece)
+def loadNationality(catalog):
+    for piece in lt.iterator(catalog['pieces']):
+        ID = piece['ConstituentID'].replace("[",'').replace(']','')
+        if mp.contains(catalog['artistsID'], ID):
+            entry= mp.get(catalog['artistsID'], ID)
+            artist= me.getValue(entry)
+        Nationalities=artist['Nationality'].split(",")
+        for nationality in Nationalities:
+            if nationality!='':
+                model.addNationality(catalog, nationality, piece)
+
+def loadAll(catalog):
+    loadArtists(catalog)
+    loadPieces(catalog)
+
+
+
 
 def loadinfo(catalog):
-    artistsfile = cf.data_dir + 'MoMA/Artists-utf8-large.csv'
-    piecesfile = cf.data_dir + 'MoMA/Artworks-utf8-large.csv'
+    artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
+    piecesfile = cf.data_dir + 'Artworks-utf8-small.csv'
     piece_file = csv.DictReader(open(piecesfile, encoding='utf-8'))
     artists_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
     model.loadinfo(piece_file, artists_file, catalog)  #catalog con dos mapas uno con info de los artistas y otro con las piezas. Adicionalmente se carga el indice medium

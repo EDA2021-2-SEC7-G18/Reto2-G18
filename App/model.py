@@ -42,14 +42,18 @@ los mismos.
 # Construccion de modelos
 def newCatalog():
     catalog = {'artists': None,
+                'artistsID': None,
                 'pieces': None,
+                'piecesID': None,
                 'medium': None,
                 'nationality':None
                }
     
     
-    catalog['artists'] = mp.newMap(maptype='PROBING', loadfactor=1)
-    catalog['pieces'] = mp.newMap(maptype='PROBING', loadfactor=1)
+    catalog['artistsID'] = mp.newMap(maptype='PROBING', loadfactor=0.5)
+    catalog['artists'] =lt.newList('ARRAY_LIST', cmpfunction=None)
+    catalog['piecesID'] = mp.newMap(maptype='PROBING', loadfactor=0.5)
+    catalog['pieces'] =lt.newList('ARRAY_LIST', cmpfunction=None)
     catalog['medium'] = mp.newMap(maptype='PROBING', loadfactor=1)
     catalog['nationality'] = mp.newMap(maptype='PROBING', loadfactor=1)
     
@@ -62,6 +66,27 @@ def put():
 
 
 # Funciones para agregar informacion al catalogo
+def addArtist(catalog, artist):
+    lt.addLast(catalog['artists'], artist)
+    mp.put(catalog['artistsID'], artist['ConstituentID'], artist)
+def addPiece(catalog, piece):
+    lt.addLast(catalog['pieces'], piece)
+    mp.put(catalog['piecesID'], piece['ConstituentID'],piece)
+def newNation(Nationality):
+    nation = { 'name':'','Pieces':None, }
+    nation['name']=Nationality
+    nation['Pieces'] = lt.newList('ARRAY_LIST',cmpfunction=None)
+    return nation
+def addNationality(catalog, Nationality, piece):
+    nationalities= catalog['nationality']
+    exisnationality = mp.contains(nationalities, Nationality)
+    if exisnationality:
+        entry = mp.get(nationalities, Nationality)
+        nation = me.getValue(entry)
+    else:
+        nation = newNation(Nationality)
+        mp.put(nationalities, Nationality, nation)
+    lt.addLast(nation['Pieces'], piece)
 
 def loadinfo(piece_file, artists_file, catalog):
   
