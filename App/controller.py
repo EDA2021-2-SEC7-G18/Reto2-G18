@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+from datetime import date
 import config as cf
 import model
 import csv
@@ -68,10 +69,22 @@ def loadNationality(catalog):
 def loadAll(catalog):
     loadArtists(catalog)
     loadPieces(catalog)
-
-
-
-
+#opcion 2
+def loadMedium(catalog):
+    for piece in lt.iterator(catalog['pieces']):
+        Medium = piece['Medium']
+        if Medium != '':
+            model.addMedium(catalog, Medium, piece)
+def result(catalog, medio, n):
+    return model.result(catalog, medio, n)
+def callcmp(date1,date2):
+    model.cmp(date1,date2)
+    return model.cmp(date1,date2)
+def callgetsizemedium(catalog, medium):
+    return model.getsizemedium(catalog,medium)
+#opcion3
+def callgetsizenation(catalog,nacionalidad):
+    return model.getsizenation(catalog,nacionalidad)
 def loadinfo(catalog):
     artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
     piecesfile = cf.data_dir + 'Artworks-utf8-small.csv'

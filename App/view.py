@@ -26,6 +26,7 @@ import controller
 from DISClib.ADT import list as lt
 assert cf
 import time
+from DISClib.ADT import map as mp
 
 
 """
@@ -61,17 +62,22 @@ while True:
         catalog = initCatalog()
         loadData(catalog)
         print(catalog['artists'])
+        print(lt.size(catalog['artists']))
         print("--- %s seconds ---" % (time.time() - start_time))
     elif int(inputs[0]) == 2:
         medio = input('Ingrese medio a buscar: ')
-        tamanio = controller.gettamanio(catalog, medio)
-        numero = int(input('Ingrese el numero de obras a buscar, como maximo ' + str(tamanio) + ': '))
-        res = controller.getres(catalog, medio, numero)
-        print(res)
+        controller.loadMedium(catalog)
+        size=controller.callgetsizemedium(catalog, medio)
+        cmp=controller.callcmp
+        print(catalog['medium'])
+        n = int(input('Ingrese el numero de obras a buscar, como maximo ' + str(size) + ': '))
+        selectedmedium = controller.result(catalog, medio, n)
+        print(selectedmedium)
     elif int(inputs[0])==3:
         nacionalidad = input('Ingrese la nacionalidad para el conteo de obras: ')
-        res = controller.countpieces(nacionalidad, catalog)
-        print(res)
+        controller.loadNationality(catalog)
+        size=controller.callgetsizenation(catalog, nacionalidad)
+        print(size)
 
     else:
         sys.exit(0)

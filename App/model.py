@@ -26,6 +26,7 @@
 
 
 from sys import call_tracing
+from DISClib.DataStructures.arraylist import newList
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
@@ -33,6 +34,8 @@ from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Sorting import mergesort as merge
 assert cf
+import DISClib.Algorithms.Sorting.quicksort as qck
+from datetime import datetime
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
@@ -73,7 +76,7 @@ def addPiece(catalog, piece):
     lt.addLast(catalog['pieces'], piece)
     mp.put(catalog['piecesID'], piece['ConstituentID'],piece)
 def newNation(Nationality):
-    nation = { 'name':'','Pieces':None, }
+    nation = { 'name':'','Pieces':None }
     nation['name']=Nationality
     nation['Pieces'] = lt.newList('ARRAY_LIST',cmpfunction=None)
     return nation
@@ -87,7 +90,54 @@ def addNationality(catalog, Nationality, piece):
         nation = newNation(Nationality)
         mp.put(nationalities, Nationality, nation)
     lt.addLast(nation['Pieces'], piece)
+#opcion2
+def newMedium(medium):
+    Medium = {'name':'','Pieces':None}
+    Medium['name'] = medium
+    Medium['Pieces'] = lt.newList('ARRAY_LIST', cmpfunction=None)
+    return Medium
+def addMedium(catalog, medium, piece):
+    med = catalog['medium']
+    existmedium= mp.contains(med,medium)
+    if existmedium:
+        entry = mp.get(med, medium)
+        selectedpiece=me.getValue(entry)
+    else:
+        selectedpiece = newMedium(medium)
+        mp.put(med, medium, selectedpiece)
+    lt.addLast(selectedpiece['Pieces'], piece)
+def cmp(piece1,piece2):
+    if str(piece1['DateAcquired'])!=('') and str(piece2['DateAcquired'])!=(''):
+        var= datetime.strptime(str(piece1['DateAcquired']), '%Y-%m-%d')<datetime.strptime(str(piece2['DateAcquired']), '%Y-%m-%d')
+    else:
+        var=False
+    return var
+def getsizemedium(catalog,medium):
 
+    entry= mp.get(catalog['medium'], medium)
+    getval=me.getValue(entry)
+    return lt.size(getval['Pieces'])
+def result(catalog, medio, n):
+    i = 0
+    newlist=lt.newList('ARRAY_LIST',cmpfunction=None)
+    entry = mp.get(catalog['medium'], medio)
+    med = me.getValue(entry)
+    qck.sort(med['Pieces'], cmp)
+    for item in lt.iterator(med['Pieces']):
+        if i<=n:
+            lt.addLast(newlist, item)
+        else:
+            break
+        i+=1
+    return newlist
+            
+#opcion3
+def getsizenation(catalog,nacionalidad):
+    entry= mp.get(catalog['nationality'], nacionalidad)
+    getval=me.getValue(entry)
+    return lt.size(getval['Pieces'])
+
+    
 def loadinfo(piece_file, artists_file, catalog):
   
     for artisttemp in artists_file:   #Crea map con constituentID y la info de los artistas
