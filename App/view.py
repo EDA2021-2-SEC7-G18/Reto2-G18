@@ -61,23 +61,28 @@ while True:
         print("Cargando información de los archivos ....")
         catalog = initCatalog()
         loadData(catalog)
-        print(catalog['artists'])
         print(lt.size(catalog['artists']))
         print("--- %s seconds ---" % (time.time() - start_time))
     elif int(inputs[0]) == 2:
         medio = input('Ingrese medio a buscar: ')
+        start_time=time.time()
         controller.loadMedium(catalog)
         size=controller.callgetsizemedium(catalog, medio)
         cmp=controller.callcmp
         print(catalog['medium'])
+        print("--- %s seconds ---" % (time.time() - start_time))
         n = int(input('Ingrese el numero de obras a buscar, como maximo ' + str(size) + ': '))
+        new=time.time()
         selectedmedium = controller.result(catalog, medio, n)
         print(selectedmedium)
+        print("--- %s seconds ---" % (time.time() - new))
     elif int(inputs[0])==3:
         nacionalidad = input('Ingrese la nacionalidad para el conteo de obras: ')
+        start_time=time.time()
         controller.loadNationality(catalog)
         size=controller.callgetsizenation(catalog, nacionalidad)
         print(size)
+        print("--- %s seconds ---" % (time.time() - start_time))
 
     else:
         sys.exit(0)
