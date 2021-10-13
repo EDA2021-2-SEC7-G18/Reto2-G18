@@ -43,8 +43,8 @@ def initCatalog():
 # Funciones para la carga de datos
 
 def loadinfo(catalog):
-    artistsfile = cf.data_dir + 'MoMA/Artists-utf8-large.csv'
-    piecesfile = cf.data_dir + 'MoMA/Artworks-utf8-large.csv'
+    artistsfile = cf.data_dir + 'Artists-utf8-large.csv'
+    piecesfile = cf.data_dir + 'Artworks-utf8-large.csv'
     piece_file = csv.DictReader(open(piecesfile, encoding='utf-8'))
     artists_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
     model.loadinfo(piece_file, artists_file, catalog)  #catalog con dos mapas uno con info de los artistas y otro con las piezas. Adicionalmente se carga el indice medium
