@@ -60,12 +60,12 @@ while True:
         print("Cargando información de los archivos ....")
         catalog = initCatalog()
         loadData(catalog)
+        print(catalog['artists'])
         print("--- %s seconds ---" % (time.time() - start_time))
     elif int(inputs[0]) == 2:
-        medio = input('1Ingrese medio a buscar: ')
+        medio = input('Ingrese medio a buscar: ')
         tamanio = controller.gettamanio(catalog, medio)
         numero = int(input('Ingrese el numero de obras a buscar, como maximo ' + str(tamanio) + ': '))
-        
         res = controller.getres(catalog, medio, numero)
         print(res)
     elif int(inputs[0])==3:
