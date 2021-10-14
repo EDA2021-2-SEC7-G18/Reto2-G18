@@ -63,7 +63,6 @@ while True:
         loadData(catalog)
         print(lt.size(catalog['artists']))
         print("--- %s seconds ---" % (time.time() - start_time))
-        print(mp.size(catalog['nationality']))
     elif int(inputs[0]) == 2:
         medio = input('Ingrese medio a buscar: ')
         start_time=time.time()

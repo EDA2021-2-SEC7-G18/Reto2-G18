@@ -1,4 +1,4 @@
-﻿"""
+"""
  * Copyright 2020, Departamento de sistemas y Computación,
  * Universidad de Los Andes
  *
@@ -58,6 +58,8 @@ def newCatalog():
     catalog['pieces'] =lt.newList('ARRAY_LIST', cmpfunction=None)
     catalog['medium'] = mp.newMap(maptype='CHAINING', loadfactor=2.00)
     catalog['nationality'] = mp.newMap(maptype='CHAINING', loadfactor=2.00)
+    catalog['medium'] = mp.newMap(maptype='CHAINING', loadfactor=4.00)
+    catalog['nationality'] = mp.newMap(maptype='CHAINING', loadfactor=4.00)
     
     return catalog
 def newmap():
