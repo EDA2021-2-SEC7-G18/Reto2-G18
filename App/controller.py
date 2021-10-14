@@ -66,9 +66,6 @@ def loadNationality(catalog):
             if nationality!='':
                 model.addNationality(catalog, nationality, piece)
 
-def loadAll(catalog):
-    loadArtists(catalog)
-    loadPieces(catalog)
 #opcion 2
 def loadMedium(catalog):
     for piece in lt.iterator(catalog['pieces']):
@@ -85,6 +82,13 @@ def callgetsizemedium(catalog, medium):
 #opcion3
 def callgetsizenation(catalog,nacionalidad):
     return model.getsizenation(catalog,nacionalidad)
+    
+def loadAll(catalog):
+    loadArtists(catalog)
+    loadPieces(catalog)
+    loadMedium(catalog)
+    loadNationality(catalog)
+
 def loadinfo(catalog):
     artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
     piecesfile = cf.data_dir + 'Artworks-utf8-small.csv'

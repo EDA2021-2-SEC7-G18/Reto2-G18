@@ -56,8 +56,8 @@ def newCatalog():
     catalog['artists'] =lt.newList('ARRAY_LIST', cmpfunction=None)
     catalog['piecesID'] = mp.newMap(maptype='PROBING', loadfactor=0.5)
     catalog['pieces'] =lt.newList('ARRAY_LIST', cmpfunction=None)
-    catalog['medium'] = mp.newMap(maptype='PROBING', loadfactor=0.5)
-    catalog['nationality'] = mp.newMap(maptype='PROBING', loadfactor=0.5)
+    catalog['medium'] = mp.newMap(maptype='CHAINING', loadfactor=4.00)
+    catalog['nationality'] = mp.newMap(maptype='CHAINING', loadfactor=4.00)
     
     return catalog
 def newmap():
