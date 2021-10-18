@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+#from App.controller import callgetsizemedium
 import config as cf
 import sys
 import controller
@@ -41,7 +42,7 @@ def printMenu():
     print("1- Cargar información en el catálogo")
     print("2- Las n obras mas antiguas por medio especifico")
     print("3- Cuantas obras por nacionalidad?")
-
+    print("4- Obras de un artista por medio especifico: ")
 catalog = None
 
 
@@ -78,6 +79,12 @@ while True:
         size=controller.callgetsizenation(catalog, nacionalidad)
         print(size)
         print("--- %s seconds ---" % (time.time() - start_time))
+    elif int(inputs[0])==4:
+        artista = input("Ingrese el artista " )
+        artistpieces = controller.obrasdelartista(catalog, artista)
+        print(artistpieces)
+        #print(controller.callgetsizemediumlist(catalog))
+        
 
     else:
         sys.exit(0)

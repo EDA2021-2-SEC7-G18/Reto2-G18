@@ -39,19 +39,20 @@ def loadData(catalog):
     #sortPieces(catalog)
     loadinfo(catalog)
    
-
+def obrasdelartista(catalog, name):
+    return model.obrasdelartista(catalog, name)
 
 def initCatalog():
     catalog = model.newCatalog()
     return catalog
 # Funciones para la carga de datos
 def loadArtists(catalog):
-    artistsfile = cf.data_dir + 'Artists-utf8-large.csv'
+    artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
     artists_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
     for artist in artists_file:
         model.addArtist(catalog, artist)
 def loadPieces(catalog):
-    piecesfile = cf.data_dir + 'Artworks-utf8-large.csv'
+    piecesfile = cf.data_dir + 'Artworks-utf8-small.csv'
     piece_file = csv.DictReader(open(piecesfile, encoding='utf-8'))
     for piece in piece_file:
         model.addPiece(catalog,piece)
@@ -66,6 +67,17 @@ def loadNationality(catalog):
             if nationality!='':
                 model.addNationality(catalog, nationality, piece)
 
+def loadName(catalog):
+    for piece in lt.iterator(catalog['pieces']):
+        ID = piece['ConstituentID'].replace("[",'').replace(']','')
+        if mp.contains(catalog['artistsID'], ID):
+            entry= mp.get(catalog['artistsID'], ID)
+            artist= me.getValue(entry)
+        Names=artist['DisplayName'].split(",")
+        for name in Names:
+            if name!='':
+                model.addName(catalog, name, piece)
+
 #opcion 2
 def loadMedium(catalog):
     for piece in lt.iterator(catalog['pieces']):
@@ -79,6 +91,9 @@ def callcmp(date1,date2):
     return model.cmp(date1,date2)
 def callgetsizemedium(catalog, medium):
     return model.getsizemedium(catalog,medium)
+
+def callgetsizemediumlist(catalog):
+    return model.getsizemediumlist(catalog)
 #opcion3
 def callgetsizenation(catalog,nacionalidad):
     return model.getsizenation(catalog,nacionalidad)
@@ -88,6 +103,7 @@ def loadAll(catalog):
     loadPieces(catalog)
     loadMedium(catalog)
     loadNationality(catalog)
+    loadName(catalog)
 
 def loadinfo(catalog):
     artistsfile = cf.data_dir + 'Artists-utf8-small.csv'

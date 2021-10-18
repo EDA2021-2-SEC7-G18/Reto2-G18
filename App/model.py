@@ -48,7 +48,9 @@ def newCatalog():
                 'pieces': None,
                 'piecesID': None,
                 'medium': None,
-                'nationality':None
+                'nationality':None,
+                'name':None
+                
                }
     
     
@@ -58,7 +60,7 @@ def newCatalog():
     catalog['pieces'] =lt.newList('ARRAY_LIST', cmpfunction=None)
     catalog['medium'] = mp.newMap(maptype='CHAINING', loadfactor=2.00)
     catalog['nationality'] = mp.newMap(maptype='CHAINING', loadfactor=2.00)
-    
+    catalog['name'] = mp.newMap(maptype='CHAINING', loadfactor=2.00)
     return catalog
 def newmap():
     return mp.newMap()
@@ -85,6 +87,23 @@ def addNationality(catalog, Nationality, piece):
         nation = lt.newList('ARRAY_LIST',cmpfunction=None)
         mp.put(nationalities, Nationality, nation)
     lt.addLast(nation, piece)
+
+def addName(catalog, Name, piece):
+    names= catalog['name']
+    exisname = mp.contains(names, Name)
+    if exisname:
+        entry = mp.get(names, Name)
+        nation = me.getValue(entry)
+    else:
+        nation = lt.newList('ARRAY_LIST',cmpfunction=None)
+        mp.put(names, Name, nation)
+    lt.addLast(nation, piece)
+
+def obrasdelartista(catalog, name):
+    entry= mp.get(catalog['name'], name)
+    getval=me.getValue(entry)
+    return getval
+
 #opcion2
 def addMedium(catalog, medium, piece):
     med = catalog['medium']
@@ -107,6 +126,21 @@ def getsizemedium(catalog,medium):
     entry= mp.get(catalog['medium'], medium)
     getval=me.getValue(entry)
     return lt.size(getval)
+
+def getsizemediumlist(catalog):
+    medios= mp.keySet(catalog['medium'])
+    res = lt.newList('SINGLE_LINKED')
+    for medium in lt.iterator(medios):
+        entry= mp.get(catalog['medium'], medium)
+        getval=me.getValue(entry)
+        tamanio = lt.size(getval) 
+        elemento = [medium,tamanio]
+        lt.addLast(res, elemento)
+    merge.sort(res, sortmediums)
+    return res
+def sortmediums(uno, dos):
+    return uno[1]>dos[1]
+
 def result(catalog, medio, n):
     i = 0
     newlist=lt.newList('ARRAY_LIST',cmpfunction=None)
