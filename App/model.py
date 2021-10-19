@@ -48,7 +48,8 @@ def newCatalog():
                 'pieces': None,
                 'piecesID': None,
                 'medium': None,
-                'nationality':None
+                'nationality':None,
+                'BeginDate':None
                }
     
     
@@ -58,6 +59,7 @@ def newCatalog():
     catalog['pieces'] =lt.newList('ARRAY_LIST', cmpfunction=None)
     catalog['medium'] = mp.newMap(maptype='CHAINING', loadfactor=2.00)
     catalog['nationality'] = mp.newMap(maptype='CHAINING', loadfactor=4.00)
+    catalog['BeginDate'] = mp.newMap(maptype='PROBING', loadfactor=0.5)
     
     return catalog
 def newmap():
@@ -85,49 +87,46 @@ def addNationality(catalog, Nationality, piece):
         nation = lt.newList('ARRAY_LIST',cmpfunction=None)
         mp.put(nationalities, Nationality, nation)
     lt.addLast(nation, piece)
+def addBeginDate(catalog, date, Artist):
+    dates= catalog['BeginDate']
+    existdate = mp.contains(dates, date)
+    if existdate:
+        entry = mp.get(dates, date)
+        value = me.getValue(entry)
+    else:
+        value = lt.newList('ARRAY_LIST',cmpfunction=None)
+        mp.put(dates, date, value)
+    lt.addLast(value, Artist)
 #opcion2
-def addMedium(catalog, medium, piece):
-    med = catalog['medium']
-    existmedium= mp.contains(med,medium)
-    if existmedium:
-        entry = mp.get(med, medium)
-        selectedpiece=me.getValue(entry)
+def begindatesortcmp(Year1,Year2):
+    if str(Year1['BeginDate']) !=str('0') and str(Year2['BeginDate']) !=str('0'):
+        condition= datetime.strptime(Year1['BeginDate'],'%Y') < datetime.strptime(Year2['BeginDate'],'%Y')
     else:
-        selectedpiece = lt.newList('ARRAY_LIST', cmpfunction=None)
-        mp.put(med, medium, selectedpiece)
-    lt.addLast(selectedpiece, piece)
-def cmp(piece1,piece2):
-    if str(piece1['DateAcquired'])!=('') and str(piece2['DateAcquired'])!=(''):
-        var= datetime.strptime(str(piece1['DateAcquired']), '%Y-%m-%d')<datetime.strptime(str(piece2['DateAcquired']), '%Y-%m-%d')
-    else:
-        var=False
-    return var
-def getsizemedium(catalog,medium):
-
-    entry= mp.get(catalog['medium'], medium)
-    getval=me.getValue(entry)
-    return lt.size(getval)
-def result(catalog, medio, n):
-    i = 0
-    newlist=lt.newList('ARRAY_LIST',cmpfunction=None)
-    entry = mp.get(catalog['medium'], medio)
-    med = me.getValue(entry)
-    qck.sort(med, cmp)
-    for item in lt.iterator(med):
-        if i<=n:
-            lt.addLast(newlist, item)
-        else:
-            break
-        i+=1
-    return newlist
-            
+        condition=False
+    return condition
+def cmpartistrange(year,start,end):
+    return datetime.strptime(str(year),'%Y') >= start and datetime.strptime(str(year),'%Y')<=end
+def artistrangelist(catalog, cmp, start, end):
+    newlist=lt.newList('ARRAY_LIST', cmpfunction=None)
+    Artistcount=0
+    for item in lt.iterator(mp.keySet(catalog['BeginDate'])):
+        entry=mp.get(catalog['BeginDate'], item)
+        group = me.getValue(entry)
+        size= lt.size(group)
+        if item != None:
+            if cmp(item,start,end):
+                Artistcount+=size
+                for i in lt.iterator(group):
+                    lt.addLast(newlist,i)
+    return newlist,Artistcount
+  
 #opcion3
 def getsizenation(catalog,nacionalidad):
     entry= mp.get(catalog['nationality'], nacionalidad)
     getval=me.getValue(entry)
     return lt.size(getval)
 
-    
+#----------------------------   
 def loadinfo(piece_file, artists_file, catalog):
   
     for artisttemp in artists_file:   #Crea map con constituentID y la info de los artistas

@@ -27,6 +27,8 @@ from DISClib.ADT import list as lt
 assert cf
 import time
 from DISClib.ADT import map as mp
+from datetime import datetime
+from prettytable import PrettyTable
 
 
 """
@@ -64,13 +66,28 @@ while True:
         print(lt.size(catalog['artists']))
         print("--- %s seconds ---" % (time.time() - start_time))
     elif int(inputs[0]) == 2:
-        medio = input('Ingrese medio a buscar: ')
+        startdate=str(input('Ingrese la fecha inicial '))
+        startdate=datetime.strptime(startdate,'%Y')
+        enddate=str(input('Ingrese la fecha final '))
+        enddate=datetime.strptime(enddate,'%Y')
         start_time=time.time()
-        size=controller.callgetsizemedium(catalog, medio)
-        cmp=controller.callcmp
-        n = int(input('Ingrese el numero de obras a buscar, como maximo ' + str(size) + ': '))
-        selectedmedium = controller.result(catalog, medio, n)
-        print(selectedmedium)
+        sortcmp=controller.callbegindatesortcmp
+        cmpfunction=controller.callartistrangecmp
+        rangelist, Artistcount=controller.callartistrangelist(catalog,cmpfunction,startdate,enddate)
+        if rangelist==None:
+            print('Artists not found in range')
+            break
+        rangelist=controller.sortlistquick(rangelist,sortcmp)
+        maintable=PrettyTable()
+        maintable.field_names = ['DisplayName','BeginDate','EndDate','Nationality','Gender']
+        maintable.align='l'
+        maintable._max_width= {'DisplayName':20,'BeginDate':10,'EndDate':10,'Nationality':15,'Gender':10}
+        for item in lt.iterator(rangelist):
+            maintable.add_row([str(item['DisplayName']), str(item['BeginDate']), str(item['EndDate']), str(item['Nationality']), str(item['Gender'])])
+        print('\nThere are '+ str(Artistcount) + ' artists born between ' + str(startdate) + ' and ' + str(enddate))
+        print('The first and last 3 artists in range are...\n')
+        print(maintable.get_string(start=0, end=3))
+        print(maintable.get_string(start=lt.size(rangelist)-3, end=lt.size(rangelist)))
         print("--- %s seconds ---" % (time.time() - start_time))
     elif int(inputs[0])==3:
         nacionalidad = input('Ingrese la nacionalidad para el conteo de obras: ')

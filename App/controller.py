@@ -27,6 +27,7 @@ import csv
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
+from DISClib.Algorithms.Sorting import quicksort as qck
 
 
 """
@@ -34,12 +35,6 @@ El controlador se encarga de mediar entre la vista y el modelo.
 """
 
 # Inicialización del Catálogo de libros
-def loadData(catalog):
-    #sortArtists(catalog)
-    #sortPieces(catalog)
-    loadinfo(catalog)
-   
-
 
 def initCatalog():
     catalog = model.newCatalog()
@@ -65,20 +60,25 @@ def loadNationality(catalog):
         for nationality in Nationalities:
             if nationality!='':
                 model.addNationality(catalog, nationality, piece)
+def loadBeginDate(catalog):
+    for artist in lt.iterator(catalog['artists']):
+        begindate=artist['BeginDate']
+        if begindate != '0':
+            model.addBeginDate(catalog, begindate, artist)
+
 
 #opcion 2
-def loadMedium(catalog):
-    for piece in lt.iterator(catalog['pieces']):
-        Medium = piece['Medium']
-        if Medium != '':
-            model.addMedium(catalog, Medium, piece)
-def result(catalog, medio, n):
-    return model.result(catalog, medio, n)
-def callcmp(date1,date2):
-    model.cmp(date1,date2)
-    return model.cmp(date1,date2)
-def callgetsizemedium(catalog, medium):
-    return model.getsizemedium(catalog,medium)
+def callbegindatesortcmp(date1,date2):
+    return model.begindatesortcmp(date1,date2)
+def callartistrangecmp(year,start,end):
+    if year != ('0') and year != (''):
+        condition=model.cmpartistrange(year,start,end)
+    else:
+        condition=False
+    return condition
+def callartistrangelist(catalog, cmpfunction,startdate,endate):
+    return model.artistrangelist(catalog, cmpfunction,startdate,endate)
+
 #opcion3
 def callgetsizenation(catalog,nacionalidad):
     return model.getsizenation(catalog,nacionalidad)
@@ -86,8 +86,8 @@ def callgetsizenation(catalog,nacionalidad):
 def loadAll(catalog):
     loadArtists(catalog)
     loadPieces(catalog)
-    loadMedium(catalog)
     loadNationality(catalog)
+    loadBeginDate(catalog)
 
 def loadinfo(catalog):
     artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
@@ -110,6 +110,8 @@ def sortPieces(catalog):
 # Funciones de ordenamiento
 def oldpieces(catalog, medio):
     model.oldpieces(catalog, medio)
+def sortlistquick(catalog,cmpfunction):
+    return qck.sort(catalog,cmpfunction)
 # Funciones de consulta sobre el catálogo
 def countpieces(nacionalidad, catalog):
     return model.countpieces(nacionalidad, catalog)
