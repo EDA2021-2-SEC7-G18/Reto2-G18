@@ -49,7 +49,8 @@ def newCatalog():
                 'piecesID': None,
                 'medium': None,
                 'nationality':None,
-                'BeginDate':None
+                'BeginDate':None,
+                'DateAcquired':None
                }
     
     
@@ -60,6 +61,7 @@ def newCatalog():
     catalog['medium'] = mp.newMap(maptype='CHAINING', loadfactor=2.00)
     catalog['nationality'] = mp.newMap(maptype='CHAINING', loadfactor=4.00)
     catalog['BeginDate'] = mp.newMap(maptype='PROBING', loadfactor=0.5)
+    catalog['DateAcquired'] = mp.newMap(maptype='PROBING', loadfactor=0.5)
     
     return catalog
 def newmap():
@@ -97,17 +99,27 @@ def addBeginDate(catalog, date, Artist):
         value = lt.newList('ARRAY_LIST',cmpfunction=None)
         mp.put(dates, date, value)
     lt.addLast(value, Artist)
+def addDateAcquired(catalog, date, piece):
+    dates= catalog['DateAcquired']
+    existdate = mp.contains(dates, date)
+    if existdate:
+        entry = mp.get(dates, date)
+        value = me.getValue(entry)
+    else:
+        value = lt.newList('ARRAY_LIST',cmpfunction=None)
+        mp.put(dates, date, value)
+    lt.addLast(value, piece)
 #opcion2
 def begindatesortcmp(Year1,Year2):
-    if str(Year1['BeginDate']) !=str('0') and str(Year2['BeginDate']) !=str('0'):
-        condition= datetime.strptime(Year1['BeginDate'],'%Y') < datetime.strptime(Year2['BeginDate'],'%Y')
+    if str(Year1) !=str('0') and str(Year2) !=str('0'):
+        condition= datetime.strptime(Year1,'%Y') < datetime.strptime(Year2,'%Y')
     else:
         condition=False
     return condition
 def cmpartistrange(year,start,end):
     return datetime.strptime(str(year),'%Y') >= start and datetime.strptime(str(year),'%Y')<=end
 def artistrangelist(catalog, cmp, start, end):
-    newlist=lt.newList('ARRAY_LIST', cmpfunction=None)
+    newmap=mp.newMap(maptype='PROBING', loadfactor=0.5)
     Artistcount=0
     for item in lt.iterator(mp.keySet(catalog['BeginDate'])):
         entry=mp.get(catalog['BeginDate'], item)
@@ -116,11 +128,44 @@ def artistrangelist(catalog, cmp, start, end):
         if item != None:
             if cmp(item,start,end):
                 Artistcount+=size
-                for i in lt.iterator(group):
-                    lt.addLast(newlist,i)
-    return newlist,Artistcount
+                mp.put(newmap,item, group)
+    return newmap,Artistcount
   
 #opcion3
+def piecerangecmp(date, start, end):
+    return datetime.strptime(date,'%Y-%m-%d')>=start and datetime.strptime(date,'%Y-%m-%d')<=end
+def keysinrange(catalog, cmp, start, end):
+    newlist= lt.newList('ARRAY_LIST',cmpfunction=None)
+    keys= mp.keySet(catalog['DateAcquired'])
+    Artistcount= 0
+    purchases = 0
+    piececount= 0
+    IDlist=[]
+    for item in lt.iterator(keys):
+        entry=mp.get(catalog['DateAcquired'], str(item))
+        group = me.getValue(entry)
+        size= lt.size(group)
+        if item != (''):
+            if cmp(item, start,end):
+                piececount+=size
+                lt.addLast(newlist, item)
+                for n in lt.iterator(group):
+                    if n['CreditLine']== 'Purchase':
+                        purchases +=1
+                    ID=n['ConstituentID']
+                    if ID not in IDlist:
+                        Artistcount += 1
+                        IDlist.append(ID)
+    return newlist, piececount, Artistcount, purchases 
+def dateacquiredsortcmp(Year1,Year2):
+    if str(Year1) !=str('') and str(Year2) !=str(''):
+        condition= datetime.strptime(Year1,'%Y-%m-%d') < datetime.strptime(Year2,'%Y-%m-%d')
+    else:
+        condition=False
+    return condition
+def keysortcmp(key1,key2):
+    return datetime.strptime(key1,'%Y-%m-%d') < datetime.strptime(key2,'%Y-%m-%d')
+#opcion5
 def getsizenation(catalog,nacionalidad):
     entry= mp.get(catalog['nationality'], nacionalidad)
     getval=me.getValue(entry)

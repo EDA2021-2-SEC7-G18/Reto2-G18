@@ -65,7 +65,11 @@ def loadBeginDate(catalog):
         begindate=artist['BeginDate']
         if begindate != '0':
             model.addBeginDate(catalog, begindate, artist)
-
+def loadDateAcquired(catalog):
+    for piece in lt.iterator(catalog['pieces']):
+            DateAcquired=piece['DateAcquired']
+            if DateAcquired != '':
+                model.addDateAcquired(catalog, DateAcquired, piece)
 
 #opcion 2
 def callbegindatesortcmp(date1,date2):
@@ -78,8 +82,22 @@ def callartistrangecmp(year,start,end):
     return condition
 def callartistrangelist(catalog, cmpfunction,startdate,endate):
     return model.artistrangelist(catalog, cmpfunction,startdate,endate)
-
 #opcion3
+def callpiecerangecmp(date, start, end):
+    if start != ('') and end != (''):
+        var= model.piecerangecmp(date,start,end)
+    else:
+        var=False
+    return var
+def callkeysinrange(catalog, cmp, start, end):
+    return model.keysinrange(catalog,cmp,start,end)
+def callkeysortcmp(key1, key2):
+    if key1 != ('') and key2 != (''):
+        condition= model.keysortcmp(key1,key2)
+    else:
+        condition=False
+    return condition
+#opcion5
 def callgetsizenation(catalog,nacionalidad):
     return model.getsizenation(catalog,nacionalidad)
     
@@ -88,6 +106,7 @@ def loadAll(catalog):
     loadPieces(catalog)
     loadNationality(catalog)
     loadBeginDate(catalog)
+    loadDateAcquired(catalog)
 
 def loadinfo(catalog):
     artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
