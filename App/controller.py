@@ -21,6 +21,7 @@
  """
 
 from datetime import date
+from DISClib.ADT.orderedmap import get
 import config as cf
 import model
 import csv
@@ -47,12 +48,12 @@ def initCatalog():
     return catalog
 # Funciones para la carga de datos
 def loadArtists(catalog):
-    artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
+    artistsfile = cf.data_dir + 'Artists-utf8-large.csv'
     artists_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
     for artist in artists_file:
         model.addArtist(catalog, artist)
 def loadPieces(catalog):
-    piecesfile = cf.data_dir + 'Artworks-utf8-small.csv'
+    piecesfile = cf.data_dir + 'Artworks-utf8-large.csv'
     piece_file = csv.DictReader(open(piecesfile, encoding='utf-8'))
     for piece in piece_file:
         model.addPiece(catalog,piece)
@@ -78,6 +79,35 @@ def loadName(catalog):
             if name!='':
                 model.addName(catalog, name, piece)
 
+def loadspecificpieces(catalog, artistpieces):
+    
+    for piece in lt.iterator(artistpieces):
+        
+        Medium = piece['Medium']
+        if Medium != '' : #and Medium != None:
+            model.addspecificpieces(catalog, Medium, piece)
+        
+def getfirst(mediosesfecifico):
+    return lt.getElement(mediosesfecifico, 1)
+def totalobras(artistpieces):
+    return lt.size(artistpieces)
+def pieceinfo(catalog, medio):
+    entry = mp.get(catalog['specificpiecesmedium'], medio)
+    getval = me.getValue(entry)
+    i=0
+    res = []
+    size = lt.size(getval)
+    for piece in lt.iterator(getval):
+        if i<=3 or i>=(size - 2) :
+            restemp = ['Titulo: ' + str(piece['Title']) + ', ', 'Fecha: ' + str(piece['Date'])+ ', ', 'Medio: ' + str(piece['Medium'])+ ', ','Dimensiones: ' + str(piece['Dimensions'])+ '.']
+            res.append(restemp)
+        
+
+        i+=1
+
+    return res
+        
+        
 #opcion 2
 def loadMedium(catalog):
     for piece in lt.iterator(catalog['pieces']):
@@ -106,13 +136,18 @@ def loadAll(catalog):
     loadName(catalog)
 
 def loadinfo(catalog):
-    artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
-    piecesfile = cf.data_dir + 'Artworks-utf8-small.csv'
+    artistsfile = cf.data_dir + 'Artists-utf8-large.csv'
+    piecesfile = cf.data_dir + 'Artworks-utf8-large.csv'
     piece_file = csv.DictReader(open(piecesfile, encoding='utf-8'))
     artists_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
     model.loadinfo(piece_file, artists_file, catalog)  #catalog con dos mapas uno con info de los artistas y otro con las piezas. Adicionalmente se carga el indice medium
     model.loadnationality(catalog)
  
+def mediostotal(mediosespecifico):
+    return lt.size(mediosespecifico)
+
+def sortspecificpieces(catalog):
+    model.sortspecificpieces(catalog)
 def gettamanio(catalog, medio):
     return model.gettamanio(catalog, medio)
 def getres(catalog, medio, numero):

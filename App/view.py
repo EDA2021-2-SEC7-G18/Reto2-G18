@@ -82,10 +82,29 @@ while True:
     elif int(inputs[0])==4:
         artista = input("Ingrese el artista " )
         artistpieces = controller.obrasdelartista(catalog, artista)
-        print(artistpieces)
-        #print(controller.callgetsizemediumlist(catalog))
+        totalobras = controller.totalobras(artistpieces)
+        #print(artistpieces)
+        controller.loadspecificpieces(catalog, artistpieces) #carga catalog['specificpiecesmedium']
+        #print(catalog['specificpiecesmedium'])
+        mediosespecifico =controller.callgetsizemediumlist(catalog)
+        mediostotal = controller.mediostotal(mediosespecifico)
+        mediomasutilizado = controller.getfirst(mediosespecifico)
+        print('Medios totales: ' + str(mediostotal))
+        print('Medio mas utilizado ' + str(mediomasutilizado[0]))
+        print('Total de obras: ' + str(totalobras))
+        controller.sortspecificpieces(catalog)
+        pieceinfo = controller.pieceinfo(catalog, mediomasutilizado[0])
+        #print(pieceinfo)
+        #print(catalog['specificpiecesmedium'])
+        #'''
+        print('Obra 1: ' +str(pieceinfo[0])+ '\n')
+        print('Obra 2: ' +str(pieceinfo[1])+ '\n')
+        print('Obra 3: ' +str(pieceinfo[2])+ '\n')
+        print('Antepenultima obra: ' +str(pieceinfo[3])+ '\n')
+        print('Penultima obra: ' +str(pieceinfo[4])+ '\n')
+        print('ultima obra: ' +str(pieceinfo[5])+ '\n')
+        #'''
         
-
     else:
         sys.exit(0)
 sys.exit(0)

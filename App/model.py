@@ -26,6 +26,7 @@
 
 
 from sys import call_tracing
+from DISClib.DataStructures.arraylist import iterator
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
@@ -49,8 +50,8 @@ def newCatalog():
                 'piecesID': None,
                 'medium': None,
                 'nationality':None,
-                'name':None
-                
+                'name':None,
+                'specificpiecesmedium':None
                }
     
     
@@ -61,6 +62,7 @@ def newCatalog():
     catalog['medium'] = mp.newMap(maptype='CHAINING', loadfactor=2.00)
     catalog['nationality'] = mp.newMap(maptype='CHAINING', loadfactor=2.00)
     catalog['name'] = mp.newMap(maptype='CHAINING', loadfactor=2.00)
+    catalog['specificpiecesmedium'] = mp.newMap(maptype='CHAINING', loadfactor=2.00)
     return catalog
 def newmap():
     return mp.newMap()
@@ -128,10 +130,10 @@ def getsizemedium(catalog,medium):
     return lt.size(getval)
 
 def getsizemediumlist(catalog):
-    medios= mp.keySet(catalog['medium'])
+    medios= mp.keySet(catalog['specificpiecesmedium'])
     res = lt.newList('SINGLE_LINKED')
     for medium in lt.iterator(medios):
-        entry= mp.get(catalog['medium'], medium)
+        entry= mp.get(catalog['specificpiecesmedium'], medium)
         getval=me.getValue(entry)
         tamanio = lt.size(getval) 
         elemento = [medium,tamanio]
@@ -190,7 +192,18 @@ def loadinfo(piece_file, artists_file, catalog):
     for medio in diccionariotemp:
         mp.put(catalog['medium'],medio,diccionariotemp[medio])  #mapa con array dentro con estructura: {medio:[titulo, anio],medio:[titulo, anio] }
     
-
+def addspecificpieces(catalog, medium, piece):
+    
+    med = catalog['specificpiecesmedium']
+    existmedium= mp.contains(med,medium)
+    if existmedium:
+        entry = mp.get(med, medium)
+        selectedpiece=me.getValue(entry)
+    else:
+        selectedpiece = lt.newList('ARRAY_LIST', cmpfunction=None)
+        mp.put(med, medium, selectedpiece)
+    lt.addLast(selectedpiece, piece)
+    
 def loadnationality(catalog):
     piecesID = mp.keySet(catalog['pieces'])
     diccionario = {}
@@ -278,9 +291,17 @@ def countpieces(nacionalidad, catalog):
 # Funciones utilizadas para comparar elementos dentro de una lista
 def comparebirthday(firstArtist, secondArtist):
     return (int(firstArtist['BeginDate']) < int(secondArtist['BeginDate']))
-
-
+def sortspecificpieces(catalog):
+    llaves = mp.keySet(catalog['specificpiecesmedium'])
+    for llave in lt.iterator(llaves):
+        entry = mp.get(catalog['specificpiecesmedium'], llave)
+        lista = me.getValue(entry)
+        
+        merge.sort(lista, cmpspecific)
+        
 # Funciones de ordenamiento
+def cmpspecific(uno, dos):
+    return uno['Date']<dos['Date']
 def sortoldpieces(pieceone, piecetwo):
     return pieceone[1]<piecetwo[1]
 def fixdatePieces(piecelist):
