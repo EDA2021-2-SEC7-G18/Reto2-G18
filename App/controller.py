@@ -86,7 +86,13 @@ def loadName(catalog):
         for name in Names:
             if name!='':
                 model.addName(catalog, name, piece)
-
+def loadspecificpieces(catalog, artistpieces):
+    
+    for piece in lt.iterator(artistpieces):
+        
+        Medium = piece['Medium']
+        if Medium != '' : #and Medium != None:
+            model.addspecificpieces(catalog, Medium, piece)
 #opcion 2
 def callbegindatesortcmp(date1,date2):
     return model.begindatesortcmp(date1,date2)
