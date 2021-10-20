@@ -183,7 +183,7 @@ def check_float(potential_float):
     except ValueError:
         return False
 def dateacquiredcmp(piece1,piece2):
-    return datetime.strptime(piece1['DateAcquired'],'%Y-%m-%d') < datetime.strptime(piece2['DateAcquired'],'%Y-%m-%d')
+    return int(piece1['Date'])< int(piece2['Date'])
 def costcmp(price1,price2):
     return price1['TransCost USD']>price2['TransCost USD']
 def cost(catalog, department):

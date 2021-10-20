@@ -119,9 +119,9 @@ while True:
         costcmp=controller.callcostcmp
         costsortlist=controller.sortlistshell(listdepartment,costcmp)
         expensivetable=PrettyTable()
-        expensivetable.field_names = ['Artists','Title','DateAcquired','Medium','Dimensions', 'Transfer Cost']
+        expensivetable.field_names = ['Artists','Title','Classification','Date','Medium','Dimensions', 'Transfer Cost']
         expensivetable.align='l'
-        expensivetable._max_width= {'Artists':50,'Title':40,'DateAcquired':10,'Medium':20,'Dimensions':50, 'Transfer Cost':15}
+        expensivetable._max_width= {'Artists':30,'Title':30,'Classification':20,'Date':10,'Medium':20,'Dimensions':40, 'Transfer Cost':15}
         for item in lt.iterator(costsortlist):
             ID=item['ConstituentID'].replace('[','').replace(']','').replace(' ','')
             ID=ID.split(',')
@@ -130,15 +130,16 @@ while True:
                 entry=mp.get(catalog['artistsID'], element)
                 artist=me.getValue(entry)
                 Name+=str(artist['DisplayName']) + ' '
-            expensivetable.add_row([str(Name), str(item['Title']), str(item['DateAcquired']), str(item['Medium']), str(item['Dimensions']), str(item['TransCost USD'])])  
+            expensivetable.add_row([str(Name), str(item['Title']), str(item['Classification']),str(item['Date']), str(item['Medium']), str(item['Dimensions']), str(item['TransCost USD'])])  
         print('The MoMa is going to transport ', sizedepartment, ' artifacts from the', departamento,' departmentn\n REMEMBER!, Not all MoMa data is complete!!!... these are estimates. \n Estimated cargo weight (kg): ', round(weight,3), '\n Estimated cargo cost (USD): ', round(totalcost, 3))
+        print('The TOP 5 most expensive items to transport are:')
         print(expensivetable.get_string(start=0, end=5))
         sortedlist=controller.sortlistshell(listdepartment,cmp)
         maintable=PrettyTable()
-        maintable.field_names = ['Artists','Title','DateAcquired','Medium','Dimensions', 'Transfer Cost']
+        maintable.field_names = ['Artists','Title','Classification','Date','Medium','Dimensions', 'Transfer Cost']
         maintable.align='l'
-        maintable._max_width= {'Artists':50,'Title':40,'DateAcquired':10,'Medium':20,'Dimensions':40, 'Transfer Cost':15}
-        for item in lt.iterator(sortedlist):
+        maintable._max_width= {'Artists':30,'Title':40,'Classification':20,'Date':10,'Medium':20,'Dimensions':40, 'Transfer Cost':15}
+        for Item in lt.iterator(sortedlist):
             ID=item['ConstituentID'].replace('[','').replace(']','').replace(' ','')
             ID=ID.split(',')
             Name=''
@@ -146,7 +147,8 @@ while True:
                 entry=mp.get(catalog['artistsID'], element)
                 artist=me.getValue(entry)
                 Name+=str(artist['DisplayName']) + ' '
-            maintable.add_row([str(Name), str(item['Title']), str(item['DateAcquired']), str(item['Medium']), str(item['Dimensions']), str(item['TransCost USD'])])  
+            maintable.add_row([str(Name), str(Item['Title']), str(Item['Classification']),str(Item['Date']), str(Item['Medium']), str(Item['Dimensions']), str(Item['TransCost USD'])])  
+        print('The TOP 5 oldest items to transport are:')
         print(maintable.get_string(start=0, end=5))
         print("--- %s seconds ---" % (time.time() - start_time))
         
