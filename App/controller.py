@@ -143,6 +143,8 @@ def pieceinfo(catalog, medio):
     return res
 def getfirst(mediosesfecifico):
     return lt.getElement(mediosesfecifico, 1)
+def totalobras(artistpieces):
+    return lt.size(artistpieces)
 
 #opcion5
 def callgetsizenation(catalog,nacionalidad):
