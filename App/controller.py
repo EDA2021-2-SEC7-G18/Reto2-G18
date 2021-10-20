@@ -146,7 +146,7 @@ def callcost(catalog, departamento):
         condition='department not found'
     return condition
 def calldateacquiredcmp(date1, date2):
-    if date1['DateAcquired'] != '' and date2['DateAcquired'] != '':
+    if date1['Date'] != '' and date2['Date'] != '':
         condition=model.dateacquiredcmp(date1,date2)
     else:
         condition=False
