@@ -184,7 +184,7 @@ while True:
         maintable=PrettyTable()
         maintable.field_names = ['Artists','Title','DateAcquired','Medium','Dimensions']
         maintable.align='l'
-        maintable._max_width= {'Artists':50,'Title':50,'DateAcquired':10,'Medium':20,'Dimensions':50}
+        maintable._max_width= {'Artists':50,'Title':40,'DateAcquired':10,'Medium':30,'Dimensions':50}
         for item in lt.iterator(value):
             ID=item['ConstituentID'].replace('[','').replace(']','').replace(' ','')
             ID=ID.split(',')
