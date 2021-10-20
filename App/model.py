@@ -187,6 +187,63 @@ def dateacquiredsortcmp(Year1,Year2):
     return condition
 def keysortcmp(key1,key2):
     return datetime.strptime(key1,'%Y-%m-%d') < datetime.strptime(key2,'%Y-%m-%d')
+#opcion4
+def getsizemediumlist(catalog):
+    medios= mp.keySet(catalog['specificpiecesmedium'])
+    res = lt.newList('SINGLE_LINKED')
+    for medium in lt.iterator(medios):
+        entry= mp.get(catalog['specificpiecesmedium'], medium)
+        getval=me.getValue(entry)
+        tamanio = lt.size(getval) 
+        elemento = [medium,tamanio]
+        lt.addLast(res, elemento)
+    merge.sort(res, sortmediums)
+    return res
+def sortspecificpieces(catalog):
+    llaves = mp.keySet(catalog['specificpiecesmedium'])
+    for llave in lt.iterator(llaves):
+        entry = mp.get(catalog['specificpiecesmedium'], llave)
+        lista = me.getValue(entry)
+        
+        merge.sort(lista, cmpspecific)
+def cmpspecific(uno, dos):
+    return uno['Date']<dos['Date']
+def addspecificpieces(catalog, medium, piece):
+    
+    med = catalog['specificpiecesmedium']
+    existmedium= mp.contains(med,medium)
+    if existmedium:
+        entry = mp.get(med, medium)
+        selectedpiece=me.getValue(entry)
+    else:
+        selectedpiece = lt.newList('ARRAY_LIST', cmpfunction=None)
+        mp.put(med, medium, selectedpiece)
+    lt.addLast(selectedpiece, piece)
+def addName(catalog, Name, piece):
+    names= catalog['name']
+    exisname = mp.contains(names, Name)
+    if exisname:
+        entry = mp.get(names, Name)
+        nation = me.getValue(entry)
+    else:
+        nation = lt.newList('ARRAY_LIST',cmpfunction=None)
+        mp.put(names, Name, nation)
+    lt.addLast(nation, piece)
+
+def obrasdelartista(catalog, name):
+    entry= mp.get(catalog['name'], name)
+    getval=me.getValue(entry)
+    return getval
+def newmap():
+    return mp.newMap()
+
+def put():
+    return mp.put()
+def reemplazar(uno):
+
+    uno = str(uno["ConstituentID"]).replace("[",'')
+    uno =uno.replace(']', '')
+    return uno
 #opcion5
 def getsizenation(catalog,nacionalidad):
     entry= mp.get(catalog['nationality'], nacionalidad)

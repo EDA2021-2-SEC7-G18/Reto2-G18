@@ -104,6 +104,37 @@ def callkeysortcmp(key1, key2):
     else:
         condition=False
     return condition
+#opcion4
+def obrasdelartista(catalog, name):
+    return model.obrasdelartista(catalog, name)
+def callgetsizemedium(catalog, medium):
+    return model.getsizemedium(catalog,medium)
+
+def callgetsizemediumlist(catalog):
+    return model.getsizemediumlist(catalog)
+def mediostotal(mediosespecifico):
+    return lt.size(mediosespecifico)
+
+def sortspecificpieces(catalog):
+    model.sortspecificpieces(catalog)
+def pieceinfo(catalog, medio):
+    entry = mp.get(catalog['specificpiecesmedium'], medio)
+    getval = me.getValue(entry)
+    i=0
+    res = []
+    size = lt.size(getval)
+    for piece in lt.iterator(getval):
+        if i<=3 or i>=(size - 2) :
+            restemp = ['Titulo: ' + str(piece['Title']) + ', ', 'Fecha: ' + str(piece['Date'])+ ', ', 'Medio: ' + str(piece['Medium'])+ ', ','Dimensiones: ' + str(piece['Dimensions'])+ '.']
+            res.append(restemp)
+        
+
+        i+=1
+
+    return res
+def getfirst(mediosesfecifico):
+    return lt.getElement(mediosesfecifico, 1)
+
 #opcion5
 def callgetsizenation(catalog,nacionalidad):
     return model.getsizenation(catalog,nacionalidad)
