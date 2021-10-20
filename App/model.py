@@ -37,6 +37,7 @@ from DISClib.Algorithms.Sorting import mergesort as merge
 assert cf
 import DISClib.Algorithms.Sorting.quicksort as qck
 from datetime import datetime
+import re
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
@@ -194,6 +195,49 @@ def newmapnations(lst):
         size=item['value']
         mp.put(nmap, key, size)
     return nmap
+#opcion6
+def check_float(potential_float):
+    try:
+        float(potential_float)
+        return True
+    except ValueError:
+        return False
+def dateacquiredcmp(piece1,piece2):
+    return int(piece1['Date'])< int(piece2['Date'])
+def costcmp(price1,price2):
+    return price1['TransCost USD']>price2['TransCost USD']
+def cost(catalog, department):
+    newlist=lt.newList('ARRAY_LIST', cmpfunction=None)
+    entry=mp.get(catalog['departments'], department)
+    value=me.getValue(entry)
+    sizedepartment= lt.size(value)
+    sumatoria=0
+    peso=0
+    for piece in lt.iterator(value):
+        costlist=[]
+        if piece['Dimensions'] != '':
+            dimension= piece['Dimensions'].replace('cm','').replace('x',',')
+            result=re.findall(r'\(.*?\)', dimension)
+            if len(result) != 0:
+                list=result[0].replace('(','').replace(')','').split(',')
+                totalsize=1
+                for i in list:
+                    if check_float(i):
+                        totalsize*=float(i)
+                cost=(totalsize/(pow(10,2*len(list))))*72.00
+                costlist.append(cost)
+            if piece['Weight (kg)']!= '':
+                cost=float(piece['Weight (kg)'])*72.00
+                costlist.append(cost)
+                peso+=float(piece['Weight (kg)'])
+            elif piece['Weight (kg)']== ('') and len(result) == 0:
+                cost=48.00
+                costlist.append(cost)
+            finalcost=round(max(costlist),3)
+            sumatoria+=finalcost
+            piece['TransCost USD']=finalcost
+            lt.addLast(newlist, piece)
+    return newlist,sumatoria, sizedepartment, peso
 
 #----------------------------   
 def loadinfo(piece_file, artists_file, catalog):
