@@ -28,6 +28,9 @@ from DISClib.ADT import list as lt
 assert cf
 import time
 from DISClib.ADT import map as mp
+import re
+from DISClib.DataStructures import mapentry as me
+from prettytable import PrettyTable
 
 
 """
@@ -108,11 +111,45 @@ while True:
     
     elif int(inputs[0])==5:
         departamento = input("Ingrese un departamento: ")
+        start_time=time.time()
         #print(catalog['pieces'])
-        controller.loaddepartment(catalog)
         #totalobras = controller.totalobrasdepartment(catalog, departamento)
-        res = controller.dimensions(catalog, departamento)
-        print(res)
+        listdepartment, totalcost,sizedepartment, weight=controller.callcost(catalog, departamento)
+        cmp=controller.calldateacquiredcmp
+        costcmp=controller.callcostcmp
+        costsortlist=controller.sortlistshell(listdepartment,costcmp)
+        expensivetable=PrettyTable()
+        expensivetable.field_names = ['Artists','Title','DateAcquired','Medium','Dimensions', 'Transfer Cost']
+        expensivetable.align='l'
+        expensivetable._max_width= {'Artists':50,'Title':40,'DateAcquired':10,'Medium':20,'Dimensions':50, 'Transfer Cost':15}
+        for item in lt.iterator(costsortlist):
+            ID=item['ConstituentID'].replace('[','').replace(']','').replace(' ','')
+            ID=ID.split(',')
+            Name=''
+            for element in ID:
+                entry=mp.get(catalog['artistsID'], element)
+                artist=me.getValue(entry)
+                Name+=str(artist['DisplayName']) + ' '
+            expensivetable.add_row([str(Name), str(item['Title']), str(item['DateAcquired']), str(item['Medium']), str(item['Dimensions']), str(item['TransCost USD'])])  
+        print('The MoMa is going to transport ', sizedepartment, ' artifacts from the', departamento,' departmentn\n REMEMBER!, Not all MoMa data is complete!!!... these are estimates. \n Estimated cargo weight (kg): ', round(weight,3), '\n Estimated cargo cost (USD): ', round(totalcost, 3))
+        print(expensivetable.get_string(start=0, end=5))
+        sortedlist=controller.sortlistshell(listdepartment,cmp)
+        maintable=PrettyTable()
+        maintable.field_names = ['Artists','Title','DateAcquired','Medium','Dimensions', 'Transfer Cost']
+        maintable.align='l'
+        maintable._max_width= {'Artists':50,'Title':40,'DateAcquired':10,'Medium':20,'Dimensions':40, 'Transfer Cost':15}
+        for item in lt.iterator(sortedlist):
+            ID=item['ConstituentID'].replace('[','').replace(']','').replace(' ','')
+            ID=ID.split(',')
+            Name=''
+            for element in ID:
+                entry=mp.get(catalog['artistsID'], element)
+                artist=me.getValue(entry)
+                Name+=str(artist['DisplayName']) + ' '
+            maintable.add_row([str(Name), str(item['Title']), str(item['DateAcquired']), str(item['Medium']), str(item['Dimensions']), str(item['TransCost USD'])])  
+        print(maintable.get_string(start=0, end=5))
+        print("--- %s seconds ---" % (time.time() - start_time))
+        
     else:
         sys.exit(0)
 sys.exit(0)

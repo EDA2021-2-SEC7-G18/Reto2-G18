@@ -21,13 +21,14 @@
  """
 
 from datetime import date
-from DISClib.ADT.orderedmap import get
 import config as cf
 import model
 import csv
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
+from DISClib.Algorithms.Sorting import quicksort as qck
+from DISClib.Algorithms.Sorting import shellsort as shl
 
 
 """
@@ -48,12 +49,12 @@ def initCatalog():
     return catalog
 # Funciones para la carga de datos
 def loadArtists(catalog):
-    artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
+    artistsfile = cf.data_dir + 'Artists-utf8-large.csv'
     artists_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
     for artist in artists_file:
         model.addArtist(catalog, artist)
 def loadPieces(catalog):
-    piecesfile = cf.data_dir + 'Artworks-utf8-small.csv'
+    piecesfile = cf.data_dir + 'Artworks-utf8-large.csv'
     piece_file = csv.DictReader(open(piecesfile, encoding='utf-8'))
     for piece in piece_file:
         model.addPiece(catalog,piece)
@@ -67,7 +68,11 @@ def loadNationality(catalog):
         for nationality in Nationalities:
             if nationality!='':
                 model.addNationality(catalog, nationality, piece)
-
+def loadDepartments(catalog):
+    for piece in lt.iterator(catalog['pieces']):
+        department=piece['Department']
+        if department != '':
+            model.adddepartment(catalog,piece,department)
 def loadName(catalog):
     for piece in lt.iterator(catalog['pieces']):
         ID = piece['ConstituentID'].replace("[",'').replace(']','')
@@ -133,24 +138,29 @@ def callgetsizemediumlist(catalog):
 #opcion3
 def callgetsizenation(catalog,nacionalidad):
     return model.getsizenation(catalog,nacionalidad)
-    
+#opcion6
+def callcost(catalog, departamento):
+    if departamento != '':
+        condition = model.cost(catalog, departamento)
+    else:
+        condition='department not found'
+    return condition
+def calldateacquiredcmp(date1, date2):
+    if date1['DateAcquired'] != '' and date2['DateAcquired'] != '':
+        condition=model.dateacquiredcmp(date1,date2)
+    else:
+        condition=False
+    return condition
+def callcostcmp(price1,price2):
+    return model.costcmp(price1,price2)
 def loadAll(catalog):
     loadArtists(catalog)
     loadPieces(catalog)
     loadMedium(catalog)
     loadNationality(catalog)
     loadName(catalog)
+    loadDepartments(catalog)
 
-def loaddepartment(catalog):
-    piecesfile = cf.data_dir + 'Artworks-utf8-small.csv'
-    piece_file = csv.DictReader(open(piecesfile, encoding='utf-8'))
-    i=0
-    for piece in piece_file:
-        i+=1
-        department = piece['Department']
-        #return piece
-        model.adddepartment(catalog, piece, department)
-    return i
 
 def dimensions(catalog, llave):
     llaves = mp.keySet(catalog['departments'])
@@ -193,6 +203,10 @@ def sortPieces(catalog):
 # Funciones de ordenamiento
 def oldpieces(catalog, medio):
     model.oldpieces(catalog, medio)
+def sortlistquick(catalog,cmpfunction):
+    return qck.sort(catalog,cmpfunction)
+def sortlistshell(catalog,cmpfunction):
+    return shl.sort(catalog,cmpfunction)
 # Funciones de consulta sobre el catálogo
 def countpieces(nacionalidad, catalog):
     return model.countpieces(nacionalidad, catalog)
