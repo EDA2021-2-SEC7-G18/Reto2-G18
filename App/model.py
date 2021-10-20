@@ -129,7 +129,16 @@ def adddepartment(catalog, piece, department):
         lista = lt.newList('ARRAY_LIST', cmpfunction=None)
         mp.put(departments, department, lista)
     lt.addLast(lista, piece)
-
+def addName(catalog, Name, piece):
+    names= catalog['name']
+    exisname = mp.contains(names, Name)
+    if exisname:
+        entry = mp.get(names, Name)
+        nation = me.getValue(entry)
+    else:
+        nation = lt.newList('ARRAY_LIST',cmpfunction=None)
+        mp.put(names, Name, nation)
+    lt.addLast(nation, piece)
 #opcion2
 def begindatesortcmp(Year1,Year2):
     if str(Year1) !=str('0') and str(Year2) !=str('0'):

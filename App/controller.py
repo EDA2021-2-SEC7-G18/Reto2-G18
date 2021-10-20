@@ -171,6 +171,7 @@ def loadAll(catalog):
     loadBeginDate(catalog)
     loadDateAcquired(catalog)
     loadDepartments(catalog)
+    loadName(catalog)
 
 def loadinfo(catalog):
     artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
