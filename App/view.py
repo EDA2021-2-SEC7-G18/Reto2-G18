@@ -43,6 +43,7 @@ def printMenu():
     print("2- Las n obras mas antiguas por medio especifico")
     print("3- Cuantas obras por nacionalidad?")
     print("4- Obras de un artista por medio especifico: ")
+    print("5- Costo de transportar obras de un departamento ")
 catalog = None
 
 
@@ -104,7 +105,14 @@ while True:
         print('Penultima obra: ' +str(pieceinfo[4])+ '\n')
         print('ultima obra: ' +str(pieceinfo[5])+ '\n')
         #'''
-        
+    
+    elif int(inputs[0])==5:
+        departamento = input("Ingrese un departamento: ")
+        #print(catalog['pieces'])
+        controller.loaddepartment(catalog)
+        #totalobras = controller.totalobrasdepartment(catalog, departamento)
+        res = controller.dimensions(catalog, departamento)
+        print(res)
     else:
         sys.exit(0)
 sys.exit(0)

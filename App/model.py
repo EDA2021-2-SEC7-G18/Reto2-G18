@@ -51,7 +51,8 @@ def newCatalog():
                 'medium': None,
                 'nationality':None,
                 'name':None,
-                'specificpiecesmedium':None
+                'specificpiecesmedium':None,
+                'departments':None
                }
     
     
@@ -63,6 +64,7 @@ def newCatalog():
     catalog['nationality'] = mp.newMap(maptype='CHAINING', loadfactor=2.00)
     catalog['name'] = mp.newMap(maptype='CHAINING', loadfactor=2.00)
     catalog['specificpiecesmedium'] = mp.newMap(maptype='CHAINING', loadfactor=2.00)
+    catalog['departments'] = mp.newMap(maptype='CHAINING', loadfactor=2.0)
     return catalog
 def newmap():
     return mp.newMap()
@@ -78,6 +80,17 @@ def addArtist(catalog, artist):
 def addPiece(catalog, piece):
     lt.addLast(catalog['pieces'], piece)
     mp.put(catalog['piecesID'], piece['ConstituentID'],piece)
+
+def adddepartment(catalog, piece, department):
+    departments = catalog['departments']
+    existdepartment = mp.contains(departments, department)
+    if existdepartment:
+        entry = mp.get(departments, department)
+        lista = me.getValue(entry)
+    else:
+        lista = lt.newList('ARRAY_LIST', cmpfunction=None)
+        mp.put(departments, department, lista)
+    lt.addLast(lista, piece)
 
 def addNationality(catalog, Nationality, piece):
     nationalities= catalog['nationality']
