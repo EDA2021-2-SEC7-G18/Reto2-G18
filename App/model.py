@@ -26,6 +26,8 @@
 
 
 from sys import call_tracing
+from typing import OrderedDict
+from App.controller import sortlistquick
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
@@ -170,6 +172,28 @@ def getsizenation(catalog,nacionalidad):
     entry= mp.get(catalog['nationality'], nacionalidad)
     getval=me.getValue(entry)
     return lt.size(getval)
+def setup(catalog):
+    keys=mp.keySet(catalog['nationality'])
+    newlist=lt.newList('ARRAY_LIST', cmpfunction=None)
+    for item in lt.iterator(keys):
+        dict = OrderedDict()
+        entry=mp.get(catalog['nationality'], item)
+        value=me.getValue(entry)
+        size=lt.size(value)
+        if item != (''):
+            dict['key']=item
+            dict['value']= size
+            lt.addLast(newlist, dict)
+    return newlist
+def keysort(key1,key2):
+    return int(key1['value'])>int(key2['value'])
+def newmapnations(lst):
+    nmap=mp.newMap(maptype='PROBING', loadfactor=0.5)
+    for item in lt.iterator(lst):
+        key=item['key']
+        size=item['value']
+        mp.put(nmap, key, size)
+    return nmap
 
 #----------------------------   
 def loadinfo(piece_file, artists_file, catalog):

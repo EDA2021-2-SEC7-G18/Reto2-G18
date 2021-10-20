@@ -20,6 +20,8 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+
+
 import config as cf
 import sys
 import controller
@@ -42,8 +44,10 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-    print("2- Las n obras mas antiguas por medio especifico")
-    print("3- Cuantas obras por nacionalidad?")
+    print("2- Listar artistas en orden cronologico")
+    print("3- Listar obras de arte en el orden cronologico")
+    print('4- Listar por medio')
+    print('Nacionalidad con mas obras')
 
 catalog = None
 
@@ -131,7 +135,7 @@ while True:
                 for element in ID:
                     entry=mp.get(catalog['artistsID'], element)
                     artist=me.getValue(entry)
-                    Name+=str(artist['DisplayName'])
+                    Name+=str(artist['DisplayName']) + ' '
                 maintable.add_row([str(Name), str(h['Title']), str(h['DateAcquired']), str(h['Medium']), str(h['Dimensions'])])
             counter+=1
             if counter >=3:
@@ -145,10 +149,11 @@ while True:
             for h in lt.iterator(value):
                 ID= str(h['ConstituentID']).replace('[','').replace(']','').replace(' ','')
                 ID=ID.split(',')
+                Name=' '
                 for element in ID:
                     entry=mp.get(catalog['artistsID'], element)
                     artist=me.getValue(entry)
-                    Name=artist['DisplayName']
+                    Name=artist['DisplayName'] + ' '
                     maintable.add_row([str(Name), str(h['Title']), str(h['DateAcquired']), str(h['Medium']), str(h['Dimensions'])])
             counter+=1
             if counter >=4:
@@ -160,10 +165,38 @@ while True:
         print("--- %s seconds ---" % (time.time() - start_time))
 
     elif int(inputs[0])==5:
-        nacionalidad = input('Ingrese la nacionalidad para el conteo de obras: ')
         start_time=time.time()
-        size=controller.callgetsizenation(catalog, nacionalidad)
-        print(size)
+        cmp=controller.callkeysort
+        setup=controller.callsetup(catalog)
+        sorted=controller.sortlistquick(setup, cmp)
+        Nationstable=PrettyTable()
+        Nationstable.field_names = ['Nationality','ArtWorks']
+        Nationstable.align='l'
+        Nationstable._max_width= {'Nationality':20,'ArtWorks':8}
+        first=lt.firstElement(sorted)['key']
+        for item in lt.iterator(sorted):
+            Nationstable.add_row([item['key'],item['value']])
+        print('The TOP 10 Countries in the MOMA are:\n')
+        print(Nationstable.get_string(start=0, end=10))
+        entry=mp.get(catalog['nationality'], first)
+        value=me.getValue(entry)
+        size=lt.size(value)
+        maintable=PrettyTable()
+        maintable.field_names = ['Artists','Title','DateAcquired','Medium','Dimensions']
+        maintable.align='l'
+        maintable._max_width= {'Artists':50,'Title':50,'DateAcquired':10,'Medium':20,'Dimensions':50}
+        for item in lt.iterator(value):
+            ID=item['ConstituentID'].replace('[','').replace(']','').replace(' ','')
+            ID=ID.split(',')
+            Name=''
+            for element in ID:
+                entry=mp.get(catalog['artistsID'], element)
+                artist=me.getValue(entry)
+                Name+=str(artist['DisplayName']) + ' '
+            maintable.add_row([str(Name), str(item['Title']), str(item['DateAcquired']), str(item['Medium']), str(item['Dimensions'])])  
+        print('The TOP nationality in the museum is: ', first, ' with ', size , ' Unique piece.\n The first and last 3 objects in the American artwork list are:\n')
+        print(maintable.get_string(start=0, end=3))
+        print(maintable.get_string(start=lt.size(value)-3, end=lt.size(value)))
         print("--- %s seconds ---" % (time.time() - start_time))
 
     else:

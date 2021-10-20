@@ -100,7 +100,16 @@ def callkeysortcmp(key1, key2):
 #opcion5
 def callgetsizenation(catalog,nacionalidad):
     return model.getsizenation(catalog,nacionalidad)
-    
+def callsetup(catalog):
+    return model.setup(catalog)
+def callkeysort(key1,key2):
+    return model.keysort(key1,key2)
+def callnewmapnations(lst):
+    if lst != None:
+        condition=model.newmapnations(lst)
+    else:
+        condition= ('No counties found')
+    return condition
 def loadAll(catalog):
     loadArtists(catalog)
     loadPieces(catalog)
