@@ -92,6 +92,7 @@ while True:
         entry1=mp.get(rangemap, str(first))
         value1=me.getValue(entry1)
         sizefirst=lt.size(value1)
+        #---------------------corregir para que aparezcan 3 y 3 siempre
         for i in lt.iterator(value1):
             maintable.add_row([str(i['DisplayName']), str(i['BeginDate']), str(i['EndDate']), str(i['Nationality']), str(i['Gender'])])
         last=lt.lastElement(keylist)
