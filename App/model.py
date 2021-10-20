@@ -27,7 +27,6 @@
 
 from sys import call_tracing
 from typing import OrderedDict
-from App.controller import sortlistquick
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
@@ -188,6 +187,11 @@ def dateacquiredsortcmp(Year1,Year2):
 def keysortcmp(key1,key2):
     return datetime.strptime(key1,'%Y-%m-%d') < datetime.strptime(key2,'%Y-%m-%d')
 #opcion4
+def getsizemedium(catalog,medium):
+
+    entry= mp.get(catalog['medium'], medium)
+    getval=me.getValue(entry)
+    return lt.size(getval)
 def getsizemediumlist(catalog):
     medios= mp.keySet(catalog['specificpiecesmedium'])
     res = lt.newList('SINGLE_LINKED')
