@@ -76,7 +76,16 @@ def loadDepartments(catalog):
         department=piece['Department']
         if department != '':
             model.adddepartment(catalog,piece,department)
-
+def loadName(catalog):
+    for piece in lt.iterator(catalog['pieces']):
+        ID = piece['ConstituentID'].replace("[",'').replace(']','')
+        if mp.contains(catalog['artistsID'], ID):
+            entry= mp.get(catalog['artistsID'], ID)
+            artist= me.getValue(entry)
+        Names=artist['DisplayName'].split(",")
+        for name in Names:
+            if name!='':
+                model.addName(catalog, name, piece)
 
 #opcion 2
 def callbegindatesortcmp(date1,date2):
