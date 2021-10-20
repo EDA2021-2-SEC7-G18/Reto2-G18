@@ -110,9 +110,14 @@ while True:
         departamento = input("Ingrese un departamento: ")
         #print(catalog['pieces'])
         controller.loaddepartment(catalog)
-        #totalobras = controller.totalobrasdepartment(catalog, departamento)
-        res = controller.dimensions(catalog, departamento)
-        print(res)
+        totalobras = controller.totalobrasdepartment(catalog, departamento)
+        dimensionsbruto = controller.dimensions(catalog, departamento)
+        dimensionesunidades = controller.tratamiento(dimensionsbruto) #lista de dimensiones listas para convertir unidades 
+        dimensiones = controller.callunidades(dimensionesunidades)
+        #costototal = controller.costo(dimensiones)
+        print(dimensiones)
+
+    
     else:
         sys.exit(0)
 sys.exit(0)

@@ -48,12 +48,12 @@ def initCatalog():
     return catalog
 # Funciones para la carga de datos
 def loadArtists(catalog):
-    artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
+    artistsfile = cf.data_dir + 'Artists-utf8-large.csv'
     artists_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
     for artist in artists_file:
         model.addArtist(catalog, artist)
 def loadPieces(catalog):
-    piecesfile = cf.data_dir + 'Artworks-utf8-small.csv'
+    piecesfile = cf.data_dir + 'Artworks-utf8-large.csv'
     piece_file = csv.DictReader(open(piecesfile, encoding='utf-8'))
     for piece in piece_file:
         model.addPiece(catalog,piece)
@@ -142,7 +142,7 @@ def loadAll(catalog):
     loadName(catalog)
 
 def loaddepartment(catalog):
-    piecesfile = cf.data_dir + 'Artworks-utf8-small.csv'
+    piecesfile = cf.data_dir + 'Artworks-utf8-large.csv'
     piece_file = csv.DictReader(open(piecesfile, encoding='utf-8'))
     i=0
     for piece in piece_file:
@@ -152,24 +152,48 @@ def loaddepartment(catalog):
         model.adddepartment(catalog, piece, department)
     return i
 
-def dimensions(catalog, llave):
-    llaves = mp.keySet(catalog['departments'])
-    res= []
-    a=0
-    for departamento in lt.iterator(llaves):
-        entry = mp.get(catalog['departments'], departamento)
-        getval = me.getValue(entry)
+def dimensions(catalog, departamento):
+    entry = mp.get(catalog['departments'], departamento)
+    getval = me.getValue(entry)
+    res= lt.newList('ARRAY_LIST')
+    for piece in lt.iterator(getval):
         
-        for piece in lt.iterator(getval):
-            if piece['Classification'] == llave:
-                
-                res.append([piece['Dimensions']])
-            
+        lt.addLast(res, piece['Dimensions'])
     return res
+def tratamiento(dimensions):
+    res = lt.newList("ARRAY_LIST")
+    for dimension in lt.iterator(dimensions):
+        dimension = str(dimension)
+        if "Overall" in dimension:
+            a = dimension.split('Overall')[-1]
+            partesstr = whatever(a)
+            
+        else: 
+            partesstr = whatever(dimension)
+        lt.addLast(res, partesstr)
+    return res
+def costo(dimensiones):
+    respuesta =0
+    for numero in lt.iterator(dimensiones):
+        respuesta += numero
+    return respuesta
+def callunidades(dimensionesunidades):
+    return model.unidades(dimensionesunidades)
+def whatever(a):
+    if '(' in a:
+        low = a.index('(')
+        high = a.find(')')
+        string = a[low+1:high]
+        if '(' in string:
+            string = string + ','
+            return string + str(whatever(string))
+        else:
+            return string
+    
 
 def loadinfo(catalog):
-    artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
-    piecesfile = cf.data_dir + 'Artworks-utf8-small.csv'
+    artistsfile = cf.data_dir + 'Artists-utf8-large.csv'
+    piecesfile = cf.data_dir + 'Artworks-utf8-large.csv'
     piece_file = csv.DictReader(open(piecesfile, encoding='utf-8'))
     artists_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
     model.loadinfo(piece_file, artists_file, catalog)  #catalog con dos mapas uno con info de los artistas y otro con las piezas. Adicionalmente se carga el indice medium

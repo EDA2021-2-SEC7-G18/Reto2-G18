@@ -72,6 +72,51 @@ def newmap():
 def put():
     return mp.put()
 
+def unidades(dimensionesunidades):
+    lista = lt.newList("ARRAY_LIST")
+    
+    for dimensionunidades in lt.iterator(dimensionesunidades):
+        dimensionunidades = str(dimensionunidades)
+        res = 1
+        if 'cm' in dimensionunidades and not 'kg' in dimensionunidades:
+            
+            dimensionlist = str(dimensionunidades).strip(' cm')
+            if ' × ' in dimensionlist:
+                dimensionlist = dimensionlist.split(' × ')
+                
+                for factor in dimensionlist:
+                    if factor.isdecimal():
+                        res = res*float(factor)
+                        res = res/100
+                    else:
+                        return dimensionlist
+                res = res*72
+                lt.addLast(lista, res)
+            else: 
+                return dimensionlist
+        elif 'kg' in dimensionesunidades:
+            dimensionesunidades = dimensionesunidades.split(', ')
+            dimensionescm = dimensionesunidades[:-1]
+            if 'cm' in dimensionescm and not 'kg' in dimensionescm:
+                dimensionlist = dimensionescm.strip(' cm').split(' × ')
+                res = 1
+                for factor in dimensionlist:
+                    res = res*float(factor)
+                    res = res/100
+            dimensioneskg = dimensionesunidades[-1].strip['kg']
+            if dimensioneskg*72 > res*72:
+                res = dimensioneskg
+            res = res*72
+            lt.addLast(lista, res)
+        elif dimensionunidades == '' or dimensionunidades == None:
+            res = 0
+            
+            lt.addLast(lista, res)
+        
+        else:
+            res = 48
+            lt.addLast(lista, res)
+    return lista
 
 # Funciones para agregar informacion al catalogo
 def addArtist(catalog, artist):
