@@ -190,22 +190,6 @@ def loadAll(catalog):
     loadDepartments(catalog)
     loadName(catalog)
 
-def loadinfo(catalog):
-    artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
-    piecesfile = cf.data_dir + 'Artworks-utf8-small.csv'
-    piece_file = csv.DictReader(open(piecesfile, encoding='utf-8'))
-    artists_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
-    model.loadinfo(piece_file, artists_file, catalog)  #catalog con dos mapas uno con info de los artistas y otro con las piezas. Adicionalmente se carga el indice medium
-    model.loadnationality(catalog)
- 
-def gettamanio(catalog, medio):
-    return model.gettamanio(catalog, medio)
-def getres(catalog, medio, numero):
-    return model.getres(catalog, medio, numero)
-
-def sortArtists(catalog):
-    model.sortArtists(catalog)
-    
 def sortPieces(catalog):
     model.sortPieces(catalog)
 # Funciones de ordenamiento
@@ -216,5 +200,3 @@ def sortlistquick(catalog,cmpfunction):
 def sortlistshell(catalog, cmpfunction):
     return shl.sort(catalog,cmpfunction)
 # Funciones de consulta sobre el catálogo
-def countpieces(nacionalidad, catalog):
-    return model.countpieces(nacionalidad, catalog)
