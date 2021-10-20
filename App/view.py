@@ -198,7 +198,7 @@ while True:
         print(maintable.get_string(start=0, end=3))
         print(maintable.get_string(start=lt.size(value)-3, end=lt.size(value)))
         print("--- %s seconds ---" % (time.time() - start_time))
-    elif int(inputs[0])==5:
+    elif int(inputs[0])==6:
         departamento = input("Ingrese un departamento: ")
         start_time=time.time()
         #print(catalog['pieces'])

@@ -71,6 +71,12 @@ def loadDateAcquired(catalog):
             DateAcquired=piece['DateAcquired']
             if DateAcquired != '':
                 model.addDateAcquired(catalog, DateAcquired, piece)
+def loadDepartments(catalog):
+    for piece in lt.iterator(catalog['pieces']):
+        department=piece['Department']
+        if department != '':
+            model.adddepartment(catalog,piece,department)
+
 
 #opcion 2
 def callbegindatesortcmp(date1,date2):
@@ -133,6 +139,7 @@ def loadAll(catalog):
     loadNationality(catalog)
     loadBeginDate(catalog)
     loadDateAcquired(catalog)
+    loadDepartments(catalog)
 
 def loadinfo(catalog):
     artistsfile = cf.data_dir + 'Artists-utf8-small.csv'

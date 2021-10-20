@@ -53,7 +53,11 @@ def newCatalog():
                 'medium': None,
                 'nationality':None,
                 'BeginDate':None,
-                'DateAcquired':None
+                'DateAcquired':None,
+                'name':None,
+                'specificpiecesmedium':None,
+                'departments':None
+
                }
     
     
@@ -65,6 +69,10 @@ def newCatalog():
     catalog['nationality'] = mp.newMap(maptype='CHAINING', loadfactor=4.00)
     catalog['BeginDate'] = mp.newMap(maptype='PROBING', loadfactor=0.5)
     catalog['DateAcquired'] = mp.newMap(maptype='PROBING', loadfactor=0.5)
+    catalog['name'] = mp.newMap(maptype='CHAINING', loadfactor=2.00)
+    catalog['specificpiecesmedium'] = mp.newMap(maptype='CHAINING', loadfactor=2.00)
+    catalog['departments'] = mp.newMap(maptype='CHAINING', loadfactor=2.0)
+
     
     return catalog
 def newmap():
@@ -112,6 +120,17 @@ def addDateAcquired(catalog, date, piece):
         value = lt.newList('ARRAY_LIST',cmpfunction=None)
         mp.put(dates, date, value)
     lt.addLast(value, piece)
+def adddepartment(catalog, piece, department):
+    departments = catalog['departments']
+    existdepartment = mp.contains(departments, department)
+    if existdepartment:
+        entry = mp.get(departments, department)
+        lista = me.getValue(entry)
+    else:
+        lista = lt.newList('ARRAY_LIST', cmpfunction=None)
+        mp.put(departments, department, lista)
+    lt.addLast(lista, piece)
+
 #opcion2
 def begindatesortcmp(Year1,Year2):
     if str(Year1) !=str('0') and str(Year2) !=str('0'):
