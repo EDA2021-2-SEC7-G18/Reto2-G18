@@ -28,6 +28,7 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import quicksort as qck
+from DISClib.Algorithms.Sorting import shellsort as shl
 
 
 """
@@ -110,6 +111,22 @@ def callnewmapnations(lst):
     else:
         condition= ('No counties found')
     return condition
+#opcion6
+def callcost(catalog, departamento):
+    if departamento != '':
+        condition = model.cost(catalog, departamento)
+    else:
+        condition='department not found'
+    return condition
+def calldateacquiredcmp(date1, date2):
+    if date1['Date'] != '' and date2['Date'] != '':
+        condition=model.dateacquiredcmp(date1,date2)
+    else:
+        condition=False
+    return condition
+def callcostcmp(price1,price2):
+    return model.costcmp(price1,price2)
+
 def loadAll(catalog):
     loadArtists(catalog)
     loadPieces(catalog)
@@ -140,6 +157,8 @@ def oldpieces(catalog, medio):
     model.oldpieces(catalog, medio)
 def sortlistquick(catalog,cmpfunction):
     return qck.sort(catalog,cmpfunction)
+def sortlistshell(catalog, cmpfunction):
+    return shl.sort(catalog,cmpfunction)
 # Funciones de consulta sobre el catálogo
 def countpieces(nacionalidad, catalog):
     return model.countpieces(nacionalidad, catalog)
