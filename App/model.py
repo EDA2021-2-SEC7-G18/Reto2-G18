@@ -199,6 +199,8 @@ def getsizemediumlist(catalog):
         lt.addLast(res, elemento)
     merge.sort(res, sortmediums)
     return res
+def sortmediums(uno, dos):
+    return uno[1]>dos[1]
 def sortspecificpieces(catalog):
     llaves = mp.keySet(catalog['specificpiecesmedium'])
     for llave in lt.iterator(llaves):
