@@ -41,7 +41,7 @@ def initCatalog():
     catalog = model.newCatalog()
     return catalog
 # Funciones para la carga de datos
-def loadArtists(catalog):
+def loadArtists(catalog):    #O(n)
     artistsfile = cf.data_dir + 'Artists-utf8-large.csv'
     artists_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
     for artist in artists_file:
@@ -51,7 +51,7 @@ def loadPieces(catalog):
     piece_file = csv.DictReader(open(piecesfile, encoding='utf-8'))
     for piece in piece_file:
         model.addPiece(catalog,piece)
-def loadNationality(catalog):
+def loadNationality(catalog): #O(m)
     for piece in lt.iterator(catalog['pieces']):
         ID = piece['ConstituentID'].replace("[",'').replace(']','')
         if mp.contains(catalog['artistsID'], ID):
@@ -61,7 +61,7 @@ def loadNationality(catalog):
         for nationality in Nationalities:
             if nationality!='':
                 model.addNationality(catalog, nationality, piece)
-def loadBeginDate(catalog):
+def loadBeginDate(catalog): #O(n)
     for artist in lt.iterator(catalog['artists']):
         begindate=artist['BeginDate']
         if begindate != '0':
@@ -181,14 +181,14 @@ def calldateacquiredcmp(date1, date2):
 def callcostcmp(price1,price2):
     return model.costcmp(price1,price2)
 
-def loadAll(catalog):
-    loadArtists(catalog)
-    loadPieces(catalog)
-    loadNationality(catalog)
-    loadBeginDate(catalog)
-    loadDateAcquired(catalog)
-    loadDepartments(catalog)
-    loadName(catalog)
+def loadAll(catalog):       
+    loadArtists(catalog)    #O(n)
+    loadPieces(catalog)     #O(n)
+    loadNationality(catalog) #O(n)
+    loadBeginDate(catalog) #O(n)
+    loadDateAcquired(catalog) #O(n)
+    loadDepartments(catalog)#O(n)
+    loadName(catalog)  #O(n)
 
 def sortPieces(catalog):
     model.sortPieces(catalog)

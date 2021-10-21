@@ -67,8 +67,8 @@ while True:
     if int(inputs[0]) == 1:
         start_time=time.time()
         print("Cargando información de los archivos ....")
-        catalog = initCatalog()
-        loadData(catalog)
+        catalog = initCatalog()    #O(1)
+        loadData(catalog)           
         print('Loaded data: \n ', lt.size(catalog['artists']), 'artists \n ', lt.size(catalog['pieces']), 'artworks')
         print("--- %s seconds ---" % (time.time() - start_time))
     elif int(inputs[0]) == 2:
@@ -170,6 +170,7 @@ while True:
         print("--- %s seconds ---" % (time.time() - start_time))
     elif int(inputs[0])==4:
         artista = input("Ingrese el artista " )
+        start_time=time.time()
         artistpieces = controller.obrasdelartista(catalog, artista)
         totalobras = controller.totalobras(artistpieces)
         #print(artistpieces)
@@ -183,15 +184,13 @@ while True:
         print('Total de obras: ' + str(totalobras))
         controller.sortspecificpieces(catalog)
         pieceinfo = controller.pieceinfo(catalog, mediomasutilizado[0])
-        #print(pieceinfo)
-        #print(catalog['specificpiecesmedium'])
-        #'''
         print('Obra 1: ' +str(pieceinfo[0])+ '\n')
         print('Obra 2: ' +str(pieceinfo[1])+ '\n')
         print('Obra 3: ' +str(pieceinfo[2])+ '\n')
         print('Antepenultima obra: ' +str(pieceinfo[3])+ '\n')
         print('Penultima obra: ' +str(pieceinfo[4])+ '\n')
         print('ultima obra: ' +str(pieceinfo[5])+ '\n')
+        print("--- %s seconds ---" % (time.time() - start_time))
 
     elif int(inputs[0])==5:
         start_time=time.time()
