@@ -88,23 +88,26 @@ while True:
         maintable.field_names = ['DisplayName','BeginDate','EndDate','Nationality','Gender']
         maintable.align='l'
         maintable._max_width= {'DisplayName':30,'BeginDate':10,'EndDate':10,'Nationality':15,'Gender':10}
-        first= lt.firstElement(keylist)
-        entry1=mp.get(rangemap, str(first))
-        value1=me.getValue(entry1)
-        sizefirst=lt.size(value1)
+        first= lt.subList(keylist,0,3)
+        totalsize=0
         #---------------------corregir para que aparezcan 3 y 3 siempre
-        for i in lt.iterator(value1):
-            maintable.add_row([str(i['DisplayName']), str(i['BeginDate']), str(i['EndDate']), str(i['Nationality']), str(i['Gender'])])
-        last=lt.lastElement(keylist)
-        entry2=mp.get(rangemap, str(last))
-        value2=me.getValue(entry2)
-        sizelast=lt.size(value2)
-        for i in lt.iterator(value2):
-            maintable.add_row([str(i['DisplayName']), str(i['BeginDate']), str(i['EndDate']), str(i['Nationality']), str(i['Gender'])])
+        for i in lt.iterator(first):
+            entry1=mp.get(rangemap, str(i))
+            value1=me.getValue(entry1)
+            totalsize+=lt.size(value1)
+            for h in lt.iterator(value1):
+                maintable.add_row([str(h['DisplayName']), str(h['BeginDate']), str(h['EndDate']), str(h['Nationality']), str(h['Gender'])])
+        last=lt.subList(keylist, lt.size(keylist)-2,3)
+        for n in lt.iterator(last):
+            entry2=mp.get(rangemap, str(n))
+            value2=me.getValue(entry2)
+            totalsize+=lt.size(value2)
+            for c in lt.iterator(value2):
+                maintable.add_row([str(c['DisplayName']), str(c['BeginDate']), str(c['EndDate']), str(c['Nationality']), str(c['Gender'])])
         print('\nThere are '+ str(Artistcount) + ' artists born between ' + str(startdate) + ' and ' + str(enddate))
         print('The first and last 3 artists in range are...\n')
         print(maintable.get_string(start=0, end=3))
-        print(maintable.get_string(start=(sizefirst+sizelast)-3, end=sizefirst+sizelast))
+        print(maintable.get_string(start=(totalsize)-3, end=totalsize))
         print("--- %s seconds ---" % (time.time() - start_time))
     elif int(inputs[0])==3:
         startdate=str(input('Ingrese la fecha inicial '))

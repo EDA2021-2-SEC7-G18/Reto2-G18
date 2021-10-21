@@ -155,7 +155,7 @@ def artistrangelist(catalog, cmp, start, end):
         entry=mp.get(catalog['BeginDate'], item)
         group = me.getValue(entry)
         size= lt.size(group)
-        if item != None:
+        if item != '0':
             if cmp(item,start,end):
                 Artistcount+=size
                 mp.put(newmap,item, group)
